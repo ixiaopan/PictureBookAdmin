@@ -1,0 +1,24 @@
+<view class="bookshelf-page">
+  <!-- 搜索 -->
+  <searchbar i-class="bookshelf-searchbar" />
+
+  <!-- 筛选 -->
+  <view class="bookshelf-filter">
+    <text class="bookshelf-filter-default" bindtap="sortBook" data-type="default">默认</text>
+    <text class="bookshelf-filter-time" bindtap="sortBook" data-type="time">录入时间</text>
+    <text class="bookshelf-filter-complete" bindtap="sortBook"  data-type="complete">信息完整度</text>
+    <text class="bookshelf-filter-rate" bindtap="sortBook"  data-type="rate">评分</text>
+  </view>
+
+  <view class="bookshelf-list">
+    <i-spin i-class="bookshelf-loading" size="large" wx:if="{{ loading }}"></i-spin>
+
+    <block>
+      <view class="col-center bookshelf-empty" wx:if="{{ !bookList || bookList.length == 0}}">
+        <image src="/images/empty.png" class="bookshelf-empty-icon" />
+        空空如也，赶快去录入书籍吧！
+      </view>
+      <book-item wx:for="{{ bookList }}" wx:key="bid" book="{{ item }}" bindbooktap="onBookTap" />
+    </block>
+  </view>
+</view>

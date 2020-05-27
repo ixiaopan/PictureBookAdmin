@@ -1,0 +1,86 @@
+<view class="record-page">
+  <form form-type="submit" catchsubmit="onCreateRecord">
+    <view class="row-start form-item-item">
+      <text class="form-item-label">书籍封面</text>
+      <view class="form-upload">
+        <image wx:if="{{ previewSrc || scan.cover }}" class="form-upload-preview" src="{{ previewSrc || scan.cover }}" mode="aspectFill"></image>
+        <button class="form-upload-button" bindtap="onChooseBookCover"></button>
+      </view>
+
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">书籍名称</text>
+      <input name="title" value="{{ scan.title }}" bindinput="onInput" data-type="title" placeholder="必填, 请输入书名" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">ISBN</text>
+      <input type="number" value="{{ scan.isbn }}" bindinput="onInput" data-type="isbn" name="isbn" placeholder="必填, 请扫描或者输入ISBN" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <image class="record-scan" src="/images/scan.png" data-type="isbn" bindtap="onScanCode"></image>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">馆内编号</text>
+      <input value="{{ library_inner_index }}" name="library_inner_index" placeholder="请扫描或者输入馆内编号" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <image class="record-scan" src="/images/scan.png" data-type="library_inner_index" bindtap="onScanCode"></image>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">价格</text>
+      <input name="price" value="{{ scan.price }}"  type="digit" placeholder="元" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">作者</text>
+      <input name="author" value="{{ scan.author }}" placeholder="请输入" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">译者</text>
+      <input name="translator" value="{{ scan.translator }}" placeholder="请输入" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">出版时间</text>
+      <input name="pubdate" value="{{ scan.pubdate }}" placeholder="请输入" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">出版社</text>
+      <input name="publisher" value="{{ scan.publisher }}" placeholder="请输入" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">页数</text>
+      <input name="pages" value="{{ scan.pages }}" type="number" placeholder="请输入" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start form-item-item">
+      <text class="form-item-label">作者简介</text>
+      <textarea placeholder="请输入" value="{{ scan.author_intro }}" placeholder-class="form-item-placeholder" class="form-item-textarea" name="author_intro" />
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start form-item-item">
+      <text class="form-item-label">内容简介</text>
+      <textarea placeholder="请输入" value="{{ scan.summary }}"  placeholder-class="form-item-placeholder" class="form-item-textarea" name="summary" />
+    </view>
+    
+    <view class="row-center record-action">
+      <button disabled="{{ disabled }}" formType="submit" class="theme-button record-button  {{ disabled ? 'disabled' : '' }}" hover-class="button-hover">保存</button>
+    </view>
+  </form>
+
+  <i-toast id="toast" />
+</view>

@@ -1,0 +1,25 @@
+<view class="book-item i-class" bindtap="onBookTap">
+  <image src="{{ book.cover }}" class="book-item-image"></image>
+
+  <view class="book-item-content">
+    <text class="book-item-title">{{ book.title }}</text>
+
+    <!-- 评分 -->
+    <view wx:if="{{ isReader && book.rate }}" class="book-item-rate">
+      <i-rate class="book-item-rate-star" count="{{ 5 }}" size="16" value="{{ book.rate / 2 }}" />
+      <text class="book-item-rate-num">{{ book.rate }}</text>
+      <text class="book-item-rate-people">{{ book.numRaters }}人评分</text>
+    </view>
+
+    <!-- 作者 年月日 出版社 -->
+    <text class="book-item-author">{{ book.author }} / {{ book.pubdate }} / {{ book.publisher }}</text>
+
+    <!-- TODO: 多少人收藏、借过等 -->
+
+    <!-- 信息完整度 -->
+    <i-progress percent="100" status="success"></i-progress>
+
+    <!-- 最近录入时间 -->
+    <text wx:if="{{ !isReader }}" class="book-item-updated-time">{{ book.updatedTime }}</text>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "我的",
+  "usingComponents": {
+    "i-cell-group": "../../dist/cell-group/index",
+    "i-panel": "../../dist/panel/index",
+    "i-cell": "../../dist/cell/index"
+  }
+}

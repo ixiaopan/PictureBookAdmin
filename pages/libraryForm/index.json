@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "书馆信息",
+  "usingComponents": {
+    "i-toast": "../../dist/toast/index"
+  }
+}

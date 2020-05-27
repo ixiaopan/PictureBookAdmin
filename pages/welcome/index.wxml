@@ -1,0 +1,12 @@
+<view class="welcome-page">
+  <!-- 加载页 -->
+  <i-spin i-class="loading-page" size="large" fix wx:if="{{ loading }}"></i-spin>
+  
+  <!-- 欢迎页 -->
+  <view class="col-center welcome-landing">
+    <image src="{{ landingPoster }}" class="welcome-poster" mode="aspectFill"></image>
+    <text class="welcome-title">欢迎使用</text>
+    <text class="welcome-desc">开始创建你的第一个图书馆吧！</text>
+    <button class="theme-button welcome-button" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">开始创建</button>
+  </view>
+</view>

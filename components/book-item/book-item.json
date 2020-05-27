@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "i-progress": "../../dist/progress/index",
+    "i-rate": "../../dist/rate/index"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "书柜",
+  "usingComponents": {
+    "searchbar": "../../components/searchbar/searchbar",
+    "book-item": "../../components/book-item/book-item",
+    "i-spin": "../../dist/spin/index"
+  }
+}

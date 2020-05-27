@@ -1,0 +1,44 @@
+{
+  "pages": [
+    "pages/welcome/index",
+    "pages/libraryForm/index",
+    "pages/home/index",
+    "pages/user/index",
+    "pages/bookList/index",
+    "pages/record/index"
+  ],
+  "window": {
+    "backgroundColor": "#f0f0f0",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#333",
+    "selectedColor": "#00A2ED",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "iconPath": "/images/tab-home.png",
+        "selectedIconPath": "/images/tab-home-fill.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/bookList/index",
+        "iconPath": "/images/tab-shelf.png",
+        "selectedIconPath": "/images/tab-shelf-fill.png",
+        "text": "书柜"
+      },
+      {
+        "pagePath": "pages/user/index",
+        "iconPath": "/images/tab-user.png",
+        "selectedIconPath": "/images/tab-user-fill.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

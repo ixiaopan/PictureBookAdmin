@@ -1,0 +1,41 @@
+<view>
+  <form form-type="submit" catchsubmit="onCreateLibrary">
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">书馆头像</text>
+
+      <view class="form-upload">
+        <image class="form-upload-preview" src="{{ previewSrc || defaultSrc }}" mode="aspectFill"></image>
+        <button class="form-upload-button" bindtap="onChooseImg"></button>
+      </view>
+      
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">书馆名称</text>
+      <input value="{{ libraryFormValue.title }}" bindinput="onInput" data-type="title" name="title" placeholder="必填, 请输入书馆名称" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">联系人</text>
+      <input value="{{ libraryFormValue.contact }}" name="contact" placeholder="请输入书馆联系人" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">联系电话</text>
+      <input value="{{ libraryFormValue.telephone }}" name="telephone" placeholder="请输入书馆联系电话" type="number" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <view class="form-item-hairline"></view>
+    </view>
+
+    <view class="row-start-center form-item-item">
+      <text class="form-item-label">书馆地址</text>
+      <input value="{{ libraryFormValue.address }}" name="address" placeholder="请输入书馆地址" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+    </view>
+
+    <button disabled="{{ disabled }}" class="theme-button {{ disabled ? 'disabled' : '' }}" formType="submit">{{ updateLibMode ? '保存' : '创建' }}</button>
+  </form>
+
+  <i-toast id="toast" />
+</view>

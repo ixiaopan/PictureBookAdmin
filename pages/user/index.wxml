@@ -1,0 +1,21 @@
+<view class="user-page">
+  <i-cell is-link url="/pages/libraryForm/index?updateLibMode=true" >
+    <view class="user-info">
+      <image src="{{ libraryInfo.cover || defaultSrc }}" class="user-avatar"></image>
+
+      <view class="user-content">
+        <text class="user-name">{{ libraryInfo.title }}</text>
+      </view>
+    </view>
+  </i-cell>
+
+  <i-panel i-class="user-list-panel" hide-border>
+    <i-cell-group>
+      <i-cell class="user-list-item" title="书馆二维码"></i-cell>
+      <i-cell title="导出数据"></i-cell>
+    </i-cell-group>
+  </i-panel>
+
+  <!-- TODO: -->
+  <button class="row-center theme-button" hover-class="button-hover">切换到读者版本</button>
+</view>

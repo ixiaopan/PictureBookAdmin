@@ -1,0 +1,28 @@
+.welcome-landing {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #FAFCFC;
+}
+.welcome-poster {
+  width: 480rpx;
+  height: 580rpx;
+}
+.welcome-title {
+  margin-top: 80rpx;
+  color: #515257;
+  font-size: 36rpx;
+  font-family: "PingFang-Medium";
+  font-weight: bold;
+}
+.welcome-desc {
+  margin-top: 28rpx;
+  color: #a0a1a6;
+  font-size: 28rpx;
+}
+.welcome-button {
+  margin-top: 80rpx;
+  width: 50% !important;
+}

@@ -1,0 +1,8 @@
+<view class="quick-area i-class">
+  <view wx:for="{{ areas }}" wx:key="item" class="quick-area-item" data-type="{{ item }}" bindtap="onAreaTap">
+    <view class="quick-area-item-inner">
+      <image src="{{ list[item].image }}" class="quick-area-icon"></image>
+      <text class="quick-area-text">{{ list[item].title }}</text>
+    </view>
+  </view>
+</view>

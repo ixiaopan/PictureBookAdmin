@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "",
+  "usingComponents": {
+    "i-spin": "../../dist/spin/index"
+  }
+}

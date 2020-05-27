@@ -1,0 +1,37 @@
+page {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.user-page {
+  padding-bottom: 40rpx;
+}
+
+/*  */
+.user-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  background-color: #fff;
+}
+.user-avatar {
+  flex: 0 0 auto;
+  margin: 0 24rpx 0 0;
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 16rpx;
+}
+.user-content {
+  flex: 1;
+}
+.user-name {
+  margin-top: 16rpx;
+  font-size: 36rpx;
+  font-family: "PingFang-Medium";
+}
+
+/*  */
+.user-list-panel {
+  margin-top: 30rpx;
+}
+

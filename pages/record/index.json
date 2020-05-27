@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "录入书籍",
+  "usingComponents": {
+    "i-toast": "../../dist/toast/index",
+    "i-spin": "../../dist/spin/index"
+  }
+}

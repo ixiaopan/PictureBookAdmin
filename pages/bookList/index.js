@@ -3,8 +3,11 @@ const { callCloudBook } = require('../../utils/cloud')
 Page({
   data: {
     loading: true,
-    bookList: [],
 
+    sortField: '',
+    sortType: '', // asc, desc
+
+    bookList: [],
     pagination: {
       page: 1,
       pageSize: 10,
@@ -48,16 +51,35 @@ Page({
   },
 
   sortBook: function (e) {
-    // 默认
+    const { type } = e.currentTarget.dataset || {};
+
+    let { sortField, sortType } = this.data;
+
+    const sortTypeList = ['asc', 'desc'];
+    sortType = sortField !== type ? 'asc' : sortTypeList[(sortTypeList.indexOf(sortType) + 1) % sortTypeList.length];
+    sortField = type;
+
+    if (sortField === 'default') {
+      sortType = '';
+      sortField = '';
+    }
+
+    this.setData({
+      sortType,
+      sortField,
+    });
+
     const params = {
       libId: this.libId,
-      sortType: '', // ['', 'creat_time', 'complete', 'rate'],
-      sortMode: 'ascend', // ['ascend', 'descend' 由大到小，时间由远到近] 
+      sortField, // ['', 'create_time', 'complete', 'rate'],
+      sortType,
       pageSize: 10,
       page: 1,
     };
 
-    this.fetchBookList(params);
+    console.log(params)
+
+    // this.fetchBookList(params);
   },
 
   onBookTap: function (e) {

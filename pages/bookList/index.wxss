@@ -1,11 +1,9 @@
-page {
+.bookshelf-searchbar {
+  padding: 0 32rpx;
   background-color: #fff;
 }
 
-.bookshelf-searchbar {
-  margin: 32rpx;
-}
-
+/*  */
 .bookshelf-filter {
   display: flex;
   flex-direction: row;
@@ -13,24 +11,69 @@ page {
   align-items: center;
 
   height: 80rpx;
+  border-top: 20rpx solid #efefef;
+  background-color: #fff;
 
-  border: none;
-  background-image: linear-gradient(0, rgb(239, 240, 243), rgb(239, 240, 243) 50%, transparent 50%);
+  background-image: linear-gradient(0, rgb(206, 206, 206), rgb(206, 206, 206) 50%, transparent 50%);
   background-size: 100% 2rpx;
   background-repeat: no-repeat;
   background-position: bottom;
-
-  font-size: 32rpx;
+}
+.bookshelf-filter-text {
+  position: relative;
+  line-height: 40rpx;
+  padding-right: 24rpx;
+  
+  font-size: 26rpx;
   font-size: "PingFang-SC";
+  color: rgb(99, 110, 114);
+}
+.bookshelf-filter-sort::before {
+  content: '';
+
+  position: absolute;
+  right: 4rpx;
+  top: 4rpx;
+
+  border: 8rpx solid rgb(99, 110, 114);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+.bookshelf-filter-sort::after {
+  content: '';
+ 
+  position: absolute;
+  right: 4rpx;
+  bottom: 4rpx;
+
+  border: 8rpx solid rgb(99, 110, 114);
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  
+}
+/*  */
+.bookshelf-filter-text-active {
+  color: #00A2ED;
+}
+.bookshelf-filter-active-asc::before {
+  border-bottom-color: #00A2ED;
+}
+.bookshelf-filter-active-desc::after {
+  border-top-color: #00A2ED;
 }
 
+/*  */
 .bookshelf-list {
   position: relative;
   min-height: 278rpx;
+}
 
-  padding: 32rpx;
+.bookshelf-book-item {
   background-color: #fff;
-  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+  padding: 32rpx;
 }
 
 .bookshelf-loading {
@@ -46,20 +89,15 @@ page {
   align-items: center;
 }
 
+/*  */
 .bookshelf-empty {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  z-index: 1;
-
+  min-height: 400rpx;
   font-size: 24rpx;
   color: rgb(180, 180, 180);
 }
-
 .bookshelf-empty-icon {
   margin-bottom: 32rpx;
   width: 100rpx;
   height: 80rpx;
 }
+

@@ -1,3 +1,5 @@
+const { $Toast } = require('../../dist/base/index');
+
 const { scanAsync, recordBookByScan, formatTime } = require('../../utils/util');
 
 Page({

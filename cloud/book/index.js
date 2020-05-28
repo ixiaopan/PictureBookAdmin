@@ -128,7 +128,7 @@ async function createBook(book) {
   
     return { 
       success: true, 
-      data: result,
+      data: { ...book, _id: docId },
     };
   } catch (e) {
     console.error('[createBook] fail: ', e);

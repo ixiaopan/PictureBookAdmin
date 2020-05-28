@@ -1,7 +1,7 @@
 <view class="scan-result">
   <view class="col-center scan-result-overview" wx:if="{{ !loading }}">
-    <block wx:if="{{ !existed && scanBook.title }}" size="36" color="#00A2ED">
-      <i-icon type="success_fill" />
+    <block wx:if="{{ !existed && scanBook.title }}">
+      <i-icon type="success_fill" size="36" color="#00A2ED" />
       <text class="scan-result-text">录入成功~</text>
     </block>
 

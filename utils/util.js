@@ -51,6 +51,7 @@ const scanAsync = () => {
       onlyFromCamera: true,
       scanType: ['barCode'],
       success: function (res) {
+        console.log('[util][scan] success: ', res);
         resolve(res);
       },
       fail: function () {
@@ -163,7 +164,9 @@ const recordBookByScan = function (libId, isbn) {
         })
         .then(ret => {
           if (ret && ret.success) {
-            return resolve({ data: ret.data, });
+            return resolve({ 
+              data: ret.data,
+            });
           }
   
           reject();

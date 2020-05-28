@@ -1,5 +1,3 @@
-
-//
 const callCloudLogin = () => {
   return wx.cloud.callFunction({
     name: 'login',
@@ -84,6 +82,5 @@ module.exports = {
   callCloudLogin: callCloudLogin,
   callCloudBook: callCloudBook,
   callCloudLibrary: callCloudLibrary,
-
   callCloudQiniuToken: callCloudQiniuToken,
 }

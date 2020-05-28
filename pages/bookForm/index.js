@@ -56,6 +56,10 @@ Page({
 
     // -- 1. 修改
     if (bookid) {
+      wx.setNavigationBarTitle({
+        title: '修改书本信息',
+      });
+
       callCloudBook({
         type: 'detail',
         data: {
@@ -77,15 +81,20 @@ Page({
         this.setData({ 
           bookid,
           loading: false,
-          disabled: !(this.requiredFields.every(field => res.data[field]) && !!res.data.cover),
           scan: res.data,
+          disabled: !(this.requiredFields.every(field => res.data[field]) && !!res.data.cover),
         });
+
+        this.requiredFields.forEach(key => this.formData[key] = res.data[key]);
       });
 
       return;
     }
 
     // -- 2. 是手动录入的
+    wx.setNavigationBarTitle({
+      title: '录入书本信息',
+    });
     this.setData({ loading: false, });
   },
 
@@ -121,7 +130,7 @@ Page({
   },
 
   checkValid: function(ignoreCover) {
-    return this.requiredFields.every(field => this.formData[field]) && (ignoreCover || this.data.previewSrc);
+    return this.requiredFields.every(field => this.formData[field]) && (ignoreCover || this.data.previewSrc || this.data.scan.cover);
   },
 
   onCreateRecord: function (e) {

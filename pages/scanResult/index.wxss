@@ -1,0 +1,8 @@
+.scan-result-overview {
+  background-color: #fff;
+  padding: 32rpx; 
+}
+
+.scan-result-text {
+  font-size: 28rpx;
+}

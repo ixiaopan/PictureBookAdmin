@@ -1,0 +1,23 @@
+<view class="scan-result">
+  <view class="col-center scan-result-overview" wx:if="{{ !loading }}">
+    <block wx:if="{{ !existed && scanBook.title }}" size="36" color="#00A2ED">
+      <i-icon type="success_fill" />
+      <text class="scan-result-text">录入成功~</text>
+    </block>
+
+    <block wx:if="{{ existed && scanBook.title }}">
+      <i-icon type="prompt_fill" size="36" color="#f1c40f" />
+      <text class="scan-result-text">您已经在 {{ scanBook._create_time }} 录过此书啦~</text>
+    </block>
+  </view>
+
+  <book-item wx:if="{{ scanBook.title }}" book="{{ scanBook }}" bindbooktap="onBookTap" />
+
+  <view>
+    <button class="theme-button scan-result-continue-button" bindtap="onContinueScan">继续录入</button>
+  </view>
+
+  <i-spin i-class="loading-page" fix size="large" wx:if="{{ loading }}"></i-spin>
+
+  <i-toast id="toast" />
+</view>

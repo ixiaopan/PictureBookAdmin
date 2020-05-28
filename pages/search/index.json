@@ -1,6 +1,7 @@
 {
-  "navigationBarTitleText": "录入书籍",
+  "navigationBarTitleText": "搜索",
   "usingComponents": {
+    "book-item": "../../components/book-item/book-item",
     "i-toast": "../../dist/toast/index",
     "i-spin": "../../dist/spin/index"
   }

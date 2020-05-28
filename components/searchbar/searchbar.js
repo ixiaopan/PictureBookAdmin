@@ -7,6 +7,8 @@ Component({
   },
 
   methods: {
-  
+    onBarTap: function () {
+      this.triggerEvent('bartap');
+    }
   },
 })

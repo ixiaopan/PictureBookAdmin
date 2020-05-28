@@ -25,6 +25,12 @@ Page({
     })
   },
 
+  onBarTap: function () {
+    wx.navigateTo({
+      url: '/pages/search/index',
+    });
+  },
+
   fetchBookList: function (params) {
     this.setData({
       loading: true,
@@ -79,14 +85,14 @@ Page({
 
     console.log(params)
 
-    // this.fetchBookList(params);
+    this.fetchBookList(params);
   },
 
   onBookTap: function (e) {
     const { _id } = e.detail || {}
 
     wx.navigateTo({
-      url: `/pages/record/index?bookid=${_id}`,
+      url: `/pages/bookForm/index?bookid=${_id}`,
     });
   },
 

@@ -1,7 +1,7 @@
 <view class="bookshelf-page">
   <!-- 搜索 -->
   <view class="bookshelf-searchbar">
-    <searchbar />
+    <searchbar bindbartap="onBarTap" />
   </view>
 
   <!-- 筛选 -->
@@ -13,7 +13,7 @@
   </view>
 
   <view class="bookshelf-list">
-    <i-spin i-class="bookshelf-loading" size="large" wx:if="{{ loading }}"></i-spin>
+    <i-spin i-class="loading-page bookshelf-loading" size="large" wx:if="{{ loading }}"></i-spin>
 
     <block>
       <view class="col-center bookshelf-empty" wx:if="{{ !bookList || bookList.length == 0}}">

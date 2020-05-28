@@ -1,5 +1,6 @@
 const qiniuUploader = require('./qiniuUploader');
 const { QINIU_CDN } = require('./config');
+const { callCloudBook, } = require('./cloud');
 
 const formatTime = (date, fmt) => {
   date = date || new Date();
@@ -122,6 +123,56 @@ const qiniuUpload = (file, token) => {
 
 const noop = function () {}
 
+const recordBookByScan = function (libId, isbn) {
+  return new Promise((resolve, reject) => {
+    callCloudBook({
+      type: 'scan',
+      data: {
+        libId,
+        isbn,
+      },
+    })
+    .then(result => {
+      // 1. 查询失败
+      if (!result || !result.success) {
+        return reject();
+      }
+  
+      // 2. 数据库存在
+      if (result.data) {
+        return resolve({
+          existed: true,
+          data: result.data,
+        });
+      }
+  
+      // 不存在，自动爬虫
+      callCloudBook({
+        type: 'spider',
+        data: { isbn, },
+      })
+      .then(res => {
+        if (!res || !res.success) {
+          return reject();
+        }
+  
+        // 自动写入数据
+        callCloudBook({
+          type: 'create',
+          data: { ...res.data, libId, },
+        })
+        .then(ret => {
+          if (ret && ret.success) {
+            return resolve({ data: ret.data, });
+          }
+  
+          reject();
+        });
+      });
+    });
+  });
+}
+
 module.exports = {
   omit: omit,
   noop: noop,
@@ -129,5 +180,6 @@ module.exports = {
   formatTime: formatTime,
   scanAsync: scanAsync,
   getStorageAsync: getStorageAsync,
-  chooseImageAsync: chooseImageAsync
+  chooseImageAsync: chooseImageAsync,
+  recordBookByScan: recordBookByScan,
 }

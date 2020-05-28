@@ -1,11 +1,13 @@
 {
   "pages": [
     "pages/welcome/index",
-    "pages/libraryForm/index",
     "pages/home/index",
     "pages/user/index",
     "pages/bookList/index",
-    "pages/record/index"
+    "pages/libraryForm/index",
+    "pages/bookForm/index",
+    "pages/scanResult/index",
+    "pages/search/index"
   ],
   "window": {
     "backgroundColor": "#f0f0f0",

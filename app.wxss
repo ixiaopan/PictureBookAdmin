@@ -185,19 +185,3 @@ text {
   z-index: 999 !important;
   background-color: #fff !important;
 }
-
-/*  */
-.modal-popup {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  box-sizing: border-box;
-  padding: 32rpx;
-  z-index: 2;
-
-  background-color: #fff;
-  border-top-left-radius: 10rpx;
-  border-top-right-radius: 10rpx;
-}

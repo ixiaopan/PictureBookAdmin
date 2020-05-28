@@ -1,5 +1,5 @@
 <view class="search-bar i-class">
-  <view class="search-bar-inner">
+  <view class="search-bar-inner" bindtap="onBarTap">
     <view class="search-bar-scan">
       <image src="/images/scan.png" class="search-bar-scan-icon" bindtap="goScan"></image>
     </view>

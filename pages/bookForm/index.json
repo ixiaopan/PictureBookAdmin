@@ -1,8 +1,6 @@
 {
   "navigationBarTitleText": " ",
   "usingComponents": {
-    "quick-area": "../../components/quick-area/index",
-    "book-item": "../../components/book-item/book-item",
     "i-toast": "../../dist/toast/index",
     "i-spin": "../../dist/spin/index"
   }

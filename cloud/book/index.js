@@ -22,10 +22,6 @@ function calculateComplete(book) {
   return Math.round(existedField / fieldList.length * 100);
 }
 
-/**
- * {
- * }
- */
 async function spiderDouban({ isbn } = {}) {
   // "image":"https://img3.doubanio.com\/view\/subject\/m\/public\/s29524313.jpg",
   // "title":"SQL基础教程",
@@ -85,16 +81,18 @@ async function spiderDouban({ isbn } = {}) {
 async function getBookListRefInLibrary(libId) {
   const libRes = await libraryDB.where({ _id: libId }).get();
 
-  const { books } = libRes.data[0] || {};
+  const myLib = libRes.data[0] || {};
+
+  const { books } = myLib;
 
   return await bookDB.where({ libId, _id: _.in(books) });
 }
 
 /**
- *
+ * 录入新书
  * {
  *   libId: ''
- *   xx: ''
+ *   isbn: ''
  * }
  */
 async function createBook(book) {
@@ -106,12 +104,14 @@ async function createBook(book) {
 
   try {
     const bookListRef = await getBookListRefInLibrary(book.libId);
+
     const bookRes = await bookListRef.where({ isbn: book.isbn }).get();
     const existedBookDoc = bookRes.data[0];
 
-    let result = null;
+    let result = null, docId;
     if (existedBookDoc) {
-      await bookDB.doc(existedBookDoc._id).update({ data: book, });
+      docId = existedBookDoc._id;
+      await bookDB.doc(docId).update({ data: book, });
     } else {
       result = await bookDB.add({ data: book, });
       docId = result._id;
@@ -124,13 +124,11 @@ async function createBook(book) {
       },
     });
 
-    console.log('[createBook] success', result);
+    console.log('[createBook] success: ', result);
   
     return { 
       success: true, 
-      data: {
-        _id: result._id,
-      },
+      data: result,
     };
   } catch (e) {
     console.error('[createBook] fail: ', e);
@@ -138,14 +136,13 @@ async function createBook(book) {
 }
 
 /**
- *
+ * 更新书的数据
  * {
- *   libId: ''
  *   _id: '',
  *   xx: ''
  * }
  */
-async function updateBook({ libId, _id, ...rest } = {}) {
+async function updateBook({  _id, ...rest } = {}) {
   rest = { 
     ...rest, 
     updated_time: +new Date(), // 最后更新时间
@@ -153,7 +150,7 @@ async function updateBook({ libId, _id, ...rest } = {}) {
   };
 
   try {
-    await bookDB.where({ libId, }).doc(_id).update({ data: rest });
+    await bookDB.doc(_id).update({ data: rest });
     return { success: true, };
   } catch (e) {
     console.error('[updateBook] fail: ', e);
@@ -186,37 +183,37 @@ async function removeBook({ libId, _id } = {}) {
 }
 
 /**
+ * 根据ID获取书本详情
  * {
- *   libId
  *   _id
  * }
  */
-async function queryBookDetailById({ libId, _id } = {}) {
+async function queryBookDetailById({ _id } = {}) {
   try {
-    const result = await bookDB.where({ libId, _id, }).get();
-    return { success: true, data: result.data[0], };
+    const result = await bookDB.doc(_id).get();
+    return { success: true, data: result.data, };
   } catch(e) {
     console.error('[queryBookDetailById] fail: ', e);
   }
 } 
 
 /**
+ * 条件查询：默认、录入时间、信息完整度、评分
  * {
  *   libId
  * }
  */
-async function queryBookList({ libId, page = 0, pageSize = 10, sortField = '', sortType = '' } = {}) {
+async function queryBookList({ libId, page = 1, pageSize = 10, sortField = '', sortType = '' } = {}) {
   try {
     let bookListRef = await getBookListRefInLibrary(libId);
 
     if (sortField) {
-      // create_time, rate, complete
-      bookListRef = await bookListRef.orderBy(sortField, sortType); // asc 升序, desc 降序
-    } 
+      // create_time, rate, complete asc 升序, desc 降序
+      bookListRef = await bookListRef.orderBy(sortField, sortType); // 
+    }
 
-    const totalList = bookListRef.count();
-
-    const listRes = await bookListRef.skip(pageSize * page).limit(pageSize).get();
+    const { total } = await bookListRef.count();
+    const listRes = await bookListRef.skip(pageSize * (page - 1)).limit(pageSize).get();
 
     return {
       success: true,
@@ -224,7 +221,7 @@ async function queryBookList({ libId, page = 0, pageSize = 10, sortField = '', s
         list: listRes.data || [],
         pageSize,
         page: page + 1,
-        total: totalList,
+        total,
       }, 
     };
   } catch(e) {
@@ -233,10 +230,10 @@ async function queryBookList({ libId, page = 0, pageSize = 10, sortField = '', s
 }
 
 /**
- * TODO:
+ * 扫码查询，在不在数据库
  * {
  *   libId: ''
- *   _id/isbn: '',
+ *   isbn: '',
  * }
  */
 async function queryBookDetailByScan({ libId, isbn } = {}) {
@@ -244,12 +241,11 @@ async function queryBookDetailByScan({ libId, isbn } = {}) {
     const bookListRef = await getBookListRefInLibrary(libId);
  
     const bookRes = await bookListRef.where({ isbn }).get();
- 
     const existedBookDoc = bookRes.data[0];
 
     return { success: true, data: existedBookDoc, };
   } catch (e) {
-    console.error('[cloud] [bookdetailbyscan] fail: ', e);
+    console.error('[cloud] [bookDetailByScan] fail: ', e);
   }
 }
 

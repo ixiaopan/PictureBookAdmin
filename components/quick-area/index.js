@@ -1,5 +1,4 @@
 const { scanAsync, } = require('../../utils/util');
-const { callCloudBook, } = require('../../utils/cloud');
 
 Component({
   externalClasses: ['i-class'],
@@ -39,23 +38,17 @@ Component({
       
       switch (type) {
         case 'hand':
-          wx.navigateTo({ url: '/pages/record/index', });
+          wx.navigateTo({ url: '/pages/bookForm/index', });
           break;
         
         case 'scan':
           scanAsync().then(res => {
-            const isbn = (res || {}).result;
-
-            if (!isbn) {
-              return $Toast({ content: '扫描失败，请重试!', type: 'error', });
-            }
-
-            this.triggerEvent('scantap', { isbn });   
+            this.triggerEvent('scantap', { isbn: res && res.result });   
           });
           break;
         
         default:
       }
-    }
-  }
+    },
+  },
 })

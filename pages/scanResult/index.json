@@ -1,9 +1,9 @@
 {
-  "navigationBarTitleText": " ",
+  "navigationBarTitleText": "扫码结果",
   "usingComponents": {
-    "quick-area": "../../components/quick-area/index",
     "book-item": "../../components/book-item/book-item",
     "i-toast": "../../dist/toast/index",
+    "i-icon": "../../dist/icon/index",
     "i-spin": "../../dist/spin/index"
   }
 }

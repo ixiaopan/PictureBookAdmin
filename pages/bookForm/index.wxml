@@ -82,7 +82,7 @@
     </view>
   </form>
 
-  <i-spin i-class="loading-page" size="large" wx:if="{{ loading }}"></i-spin>
+  <i-spin i-class="loading-page" fix size="large" wx:if="{{ loading }}"></i-spin>
   
   <i-toast id="toast" />
 </view>

@@ -40,5 +40,5 @@
     </view>
   </block>
 
-  <i-spin i-class="loading-page" size="large" wx:if="{{ loading }}"></i-spin>
+  <i-spin i-class="col-center loading-page search-loading" fix size="large" wx:if="{{ loading }}"></i-spin>
 </view>

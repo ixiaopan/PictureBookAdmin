@@ -1,6 +1,3 @@
-page {
-  padding-bottom: env(safe-area-inset-bottom);
-}
 .user-page {
   padding-bottom: 40rpx;
 }
@@ -34,4 +31,3 @@ page {
 .user-list-panel {
   margin-top: 30rpx;
 }
-

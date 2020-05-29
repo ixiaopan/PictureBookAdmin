@@ -2,13 +2,7 @@
   <i-spin fix wx:if="{{ loading }}"></i-spin>
 
   <!-- 快捷功能：扫码、手动录入、读者荐购 -->
-  <quick-area areas="{{ ['scan', 'hand', 'recom', 'forward'] }}" bindscantap="onScanTap" />
-
-  <!-- TODO: 数据看板 -->
-  <!-- <view class="row-center index-stat-area">
-    <view class="index-stat-item">新增读者</view>
-    <view class="index-stat-item">读者总数</view>
-  </view> -->
+  <quick-area areas="{{ ['scan', 'hand'] }}" bindscantap="onScanTap" />
 
   <i-toast id="toast" />
 </view>

@@ -52,3 +52,7 @@
   font-size: 28rpx;
   color: rgb(99, 110, 114);
 }
+
+.search-loading {
+  top: 128rpx;
+}

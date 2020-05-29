@@ -111,6 +111,7 @@ const removeStorageAsync = (key) => {
   });
   
 }
+
 const omit = (obj, keyList) => {
   keyList = Array.isArray(keyList) ? keyList : [ keyList ];
 

@@ -3,11 +3,10 @@ const { callCloudBook } = require('../../utils/cloud')
 Page({
   data: {
     loading: true,
-
+    loadingMore: false,
+    bookList: [],
     sortField: '',
     sortType: '', // asc, desc
-
-    bookList: [],
     pagination: {
       page: 1,
       pageSize: 10,
@@ -22,7 +21,22 @@ Page({
 
     this.fetchBookList({
       libId: this.libId,
-    })
+    });
+  },
+
+  // 下拉加载
+  onReachBottom: function () {
+    const { loadingMore, sortField, sortType, pagination } = this.data;
+
+    if (loadingMore || this.data.bookList.length == this.data.pagination.total) return;
+
+    this.fetchBookList({
+      libId: this.libId,
+      sortField,
+      sortType,
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+    });
   },
 
   onBarTap: function () {
@@ -32,22 +46,32 @@ Page({
   },
 
   fetchBookList: function (params) {
-    this.setData({
-      loading: true,
-    });
+    if (params.page === 1) {
+      this.setData({ loading: true, });
+    } else {
+      this.setData({ loadingMore: true });
+    }
 
     return callCloudBook({
       type: 'query',
       data: params,
     })
     .then(res => {
-      const { list, page, total } = (res && res.data) || {};
+      const { list = [], page, total } = (res && res.data) || {};
 
       const hasList = list && list.length > 0;
 
+      if (!list || !list.length) {
+        return this.setData({ loading: false, loadingMore: false, });
+      }
+
       this.setData({
         loading: false,
-        bookList: list,
+        loadingMore: false,
+        bookList: page === 2 ? list : [
+          ...this.data.bookList,
+          ...list,
+        ],
         pagination: {
           ...this.data.pagination,
           ...(hasList ? { page, total, } :{}),

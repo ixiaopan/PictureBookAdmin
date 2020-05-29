@@ -1,66 +1,110 @@
-// pages/search.js
+const { callCloudBook, } = require('../../utils/cloud');
+const { setStorageAsync, getStorageAsync, removeStorageAsync } = require('../../utils/util');
+const { CACHE_KEY_MAP } = require('../../utils/config');
+
 Page({
-
-  /**
-   * Page initial data
-   */
   data: {
-
+    loading: false,
+    resultList: [],
+    searchedName: '',
+    inputName: '',
+    historyList: [],
   },
 
-  /**
-   * Lifecycle function--Called when page load
-   */
-  onLoad: function (options) {
+  onLoad: function () {
+    getStorageAsync(CACHE_KEY_MAP.SEARCH_HISTORY).then(res => {
+      try {
+        res = JSON.parse(res);
+      } catch (e) {}
 
+      this.setData({
+        historyList: res || [],
+      });
+    });
   },
 
-  /**
-   * Lifecycle function--Called when page is initially rendered
-   */
-  onReady: function () {
+  // 选中历史记录
+  searchByHistoryKeyword: function (e) {
+    const { index } = e.currentTarget.dataset || {};
 
+    const inputName = this.data.historyList[index];
+
+    this.setData({
+      inputName,
+    });
+
+    this.onSearchBlur({ detail: inputName });
   },
 
-  /**
-   * Lifecycle function--Called when page show
-   */
-  onShow: function () {
+  // 输入中的
+  onSearchInput: function (e) {
+    const bookname = e.detail;
 
+    this.setData({
+      inputName: bookname,
+      searchedName: '',
+    });
   },
 
-  /**
-   * Lifecycle function--Called when page hide
-   */
-  onHide: function () {
+  // 最终搜索的
+  onSearchBlur: function (e) {
+    const val = e.detail;
 
+    if (val) {
+      this.startSearch(val);
+    }
   },
 
-  /**
-   * Lifecycle function--Called when page unload
-   */
-  onUnload: function () {
+  startSearch: async function (bookname) {
+    let nextHistoryList = [ ...this.data.historyList ];
 
+    if (nextHistoryList.indexOf(bookname) <= -1) {
+      nextHistoryList.unshift(bookname);
+    }
+
+    // 取前8个
+    nextHistoryList = nextHistoryList.slice(0, 8);
+
+    this.setData({
+      loading: true,
+      historyList: nextHistoryList,
+      searchedName: '',
+    });
+
+    await setStorageAsync(CACHE_KEY_MAP.SEARCH_HISTORY, JSON.stringify(nextHistoryList));
+
+    callCloudBook({
+      type: 'search',
+      data: {
+        libId: getApp().globalData.libraryInfo.libId,
+        bookname,
+      },
+    })
+    .then(res => {
+      this.setData({
+        loading: false,
+        resultList: res && res.data || [],
+        searchedName: bookname,
+      });
+    });
   },
 
-  /**
-   * Page event handler function--Called when user drop down
-   */
-  onPullDownRefresh: function () {
-
+  // 清除缓存
+  clearSearchHistory: function () {
+    removeStorageAsync(CACHE_KEY_MAP.SEARCH_HISTORY).then(res => {
+      if (res) {
+        this.setData({
+          historyList: [],
+        });
+      }
+    });
   },
 
-  /**
-   * Called when page reach bottom
-   */
-  onReachBottom: function () {
+  onBookTap: function (e) {
+    const { _id } = e.detail || {};
 
+    wx.navigateTo({
+      url: `/pages/bookForm/index?bookid=${_id}`,
+    });
   },
-
-  /**
-   * Called when user click on the top right corner to share
-   */
-  onShareAppMessage: function () {
-
-  }
 })

@@ -4,6 +4,6 @@
       <image src="/images/scan.png" class="search-bar-scan-icon" bindtap="goScan"></image>
     </view>
 
-    <input placeholder="请输入书名或者扫码搜索" placeholder-class="search-bar-placeholder" class="search-bar-input"></input>
+    <input value="{{ inputVal }}" placeholder="请输入书名或者扫码搜索" placeholder-class="search-bar-placeholder" class="search-bar-input" bindblur="onSearch" bindinput="onInput"></input>
   </view>
 </view>

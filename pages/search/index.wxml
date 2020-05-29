@@ -1,2 +1,44 @@
-<!--pages/search.wxml-->
-<text>pages/search.wxml</text>
+<view class="search-page">
+  <view class="search-searchbar">
+    <searchbar inputVal="{{ inputName }}" bindsearchinput="onSearchInput" bindsearchblur="onSearchBlur" />
+  
+    <view wx:if="{{ !inputName }}" class="search-history">
+      <view wx:if="{{ historyList && historyList.length }}" class="search-history-clear" bindtap="clearSearchHistory">清楚记录</view>
+
+      <view 
+        wx:for="{{ historyList }}" 
+        bindtap="searchByHistoryKeyword" 
+        wx:key="index"
+        class="row-center search-history-item"
+        data-index="{{ index }}"
+      >
+        <text class="search-history-text" >{{ item }}</text>
+      </view>
+    </view>
+  </view>
+
+  <block wx:if="{{ inputName && searchedName }}">
+    <view class="search-result">
+      <text class="search-result-title">馆内结果</text>
+
+      <view wx:if="{{ resultList && resultList.length }}" class="search-result-list">
+        <book-item 
+          i-class="bookshelf-book-item" 
+          wx:for="{{ resultList }}"
+          wx:key="_id" 
+          book="{{ item }}" 
+          bindbooktap="onBookTap"
+        />
+      </view>
+
+      <view wx:else class="search-result-empty">书馆内找不到此书~</view>
+    </view>
+
+    <view class="search-result search-outer-result">
+      <text class="search-result-title">馆外结果</text>
+      <view class="search-result-list"></view>
+    </view>
+  </block>
+
+  <i-spin i-class="loading-page" size="large" wx:if="{{ loading }}"></i-spin>
+</view>

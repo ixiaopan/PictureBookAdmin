@@ -1,7 +1,7 @@
 .search-bar {
   position: relative;
-  background-color: #fff;
-  height: 128rpx;
+  height: 64rpx;
+  box-sizing: border-box;
 
   display: flex;
   flex-direction: row;
@@ -21,7 +21,7 @@
   border-radius: 80rpx;
   border: 2rpx solid rgb(206, 206, 206);
 
-  transform: translateY(32rpx) scale(0.5);
+  transform: scale(0.5);
   transform-origin: 0 0;
 }
 .search-bar-inner {

@@ -12,8 +12,7 @@ const _ = db.command;
 
 function calculateComplete(book) {
   const fieldList = [
-    'cover', 'title', 'isbn', 
-    'library_inner_index', 'price', 'author', 'translator', 
+    'cover', 'title', 'isbn', 'price', 'author', 
     'pubdate', 'publisher', 'author_intro', 'summary'
   ];
 
@@ -249,6 +248,26 @@ async function queryBookDetailByScan({ libId, isbn } = {}) {
   }
 }
 
+/**
+ * 根据搜索模糊查询
+ */
+async function queryBookListBySearch({ libId, bookname } = {}) {
+  try {
+    const bookListRef = await getBookListRefInLibrary(libId);
+ 
+    const bookRes = await bookListRef.where({ 
+      title: db.RegExp({
+        regexp: '.*' + bookname + '.*',
+        options: 'i',
+      }),
+    }).get();
+
+    return { success: true, data: bookRes.data || [], };
+  } catch (e) {
+    console.error('[cloud] [queryBookListBySearch] fail: ', e);
+  }
+}
+
 exports.main = async (event) => {
   const { type, data } = event || {};
 
@@ -264,6 +283,7 @@ exports.main = async (event) => {
     case 'update':
       return updateBook(data);
 
+    // TODO:
     case 'remove':
       return removeBook(data);
 
@@ -275,6 +295,9 @@ exports.main = async (event) => {
 
     case 'scan':
       return queryBookDetailByScan(data);
+    
+    case 'search':
+      return queryBookListBySearch(data);
 
     default:
   }  

@@ -1,6 +1,6 @@
 const { $Toast } = require('../../dist/base/index');
 
-const { chooseImageAsync, scanAsync, qiniuUpload } = require('../../utils/util');
+const { chooseImageAsync, scanAsync, qiniuUpload, recordBookByScanOrHand } = require('../../utils/util');
 
 const { 
   callCloudBook,
@@ -154,9 +154,8 @@ Page({
     wx.showLoading({ title: '正在保存', });
 
     new Promise(resolve => {
-      // 说明是手动上传了
-      if (this.data.previewSrc) {
-        return callCloudQiniuToken().then(token => { resolve(qiniuUpload(previewSrc[0], token)); });
+      if (this.data.previewSrc) { // 说明是手动上传了
+        return callCloudQiniuToken().then(token => { resolve(qiniuUpload(this.data.previewSrc[0], token)); });
       }
 
       resolve(this.data.scan.cover);
@@ -180,29 +179,45 @@ Page({
         author_intro, summary,
       };
 
-      callCloudBook({
-        type: this.data.bookid ? 'update' : 'create',
-        data: params,
-      })
-      .then(res => {
-        if (!res || !res.success) {
-          this.locked = false;
+      // 修改模式
+      if (this.data.bookid) {
+        return callCloudBook({ type: 'update', data: params, }).then(res => {
+          if (!res || !res.success) {
+            return this.showError(res);
+          }
+  
+          this.showSuccess();
+        });
+      }
 
-          wx.hideLoading();
-
-          this.setData({ disabled: false, });
-
-          $Toast({ content: res && res.msg || '保存失败，请重试!', type: 'error', });
-
-          return;
+      recordBookByScanOrHand(this.libId, isbn, params).then(({ existed } = {}) => {
+        if (existed) {
+          return this.showError({ msg: '你已经录入过此书~'});
         }
 
-        wx.hideLoading();
-
-        wx.showToast({ title: '保存成功', });
-
-        setTimeout(() => wx.navigateBack(), 1000);
+        this.showSuccess();
+      })
+      .catch(err => {
+        this.showError(err);
       });
     });
+  },
+
+  showSuccess: function () {
+    wx.hideLoading();
+
+    wx.showToast({ title: '保存成功', });
+
+    setTimeout(() => wx.navigateBack(), 1000);
+  },
+
+  showError: function (err) {
+    this.locked = false;
+
+    wx.hideLoading();
+
+    this.setData({ disabled: false, });
+
+    $Toast({ content: err && err.msg || '保存失败，请重试!', type: 'error', });
   },
 })

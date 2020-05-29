@@ -1,6 +1,6 @@
 const { $Toast } = require('../../dist/base/index');
 
-const { scanAsync, recordBookByScan, formatTime } = require('../../utils/util');
+const { scanAsync, recordBookByScanOrHand, formatTime } = require('../../utils/util');
 
 Page({
   data: {
@@ -27,7 +27,7 @@ Page({
 
     this.setData({  loading: true, });
 
-    return recordBookByScan(libId, isbn)
+    return recordBookByScanOrHand(libId, isbn)
       .then(({ existed, data } = {}) => {
         this.setData({ 
           loading: false,
@@ -39,7 +39,7 @@ Page({
         });
       })
       .catch(() => {
-        this.setData({  loading: false, });
+        this.setData({ loading: false, });
 
         $Toast({ content: '查询失败，请重试!', type: 'error', });
 

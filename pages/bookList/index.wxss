@@ -1,5 +1,14 @@
+.bookshelf-page {
+  padding-bottom: 32rpx;
+}
+
 .bookshelf-searchbar {
-  padding: 0 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+
+  padding: 32rpx;
   background-color: #fff;
 }
 

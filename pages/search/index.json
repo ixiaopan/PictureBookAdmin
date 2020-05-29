@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "搜索",
   "usingComponents": {
+    "searchbar": "../../components/searchbar/searchbar",
     "book-item": "../../components/book-item/book-item",
     "i-toast": "../../dist/toast/index",
     "i-spin": "../../dist/spin/index"

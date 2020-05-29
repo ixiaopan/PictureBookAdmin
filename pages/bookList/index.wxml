@@ -24,10 +24,20 @@
       <book-item 
         i-class="bookshelf-book-item" 
         wx:for="{{ bookList }}"
-        wx:key="bid" 
+        wx:key="_id" 
         book="{{ item }}" 
         bindbooktap="onBookTap"
       />
+
+      <view wx:if="{{ bookList.length }}" class="loadmore">
+        <view wx:if="{{ bookList.length < pagination.total }}" class="row-center loadmore-loading">
+          <text class="loadmore-text">{{ loadingMore ? '加载中...' : '' }}</text>
+        </view>
+
+        <view wx:else class="row-center loadmore-end">
+          <text class="loadmore-text">我是有底线的</text>
+        </view>
+      </view>
     </block>
   </view>
 </view>

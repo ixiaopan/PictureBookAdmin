@@ -78,6 +78,39 @@ const getStorageAsync = (key) => {
   });
 }
 
+const setStorageAsync = (key, val) => {
+  return new Promise(resolve => {
+    wx.setStorage({
+      key,
+      data: val,
+      success: (res) => {
+        console.log(`setstorage [${key}] success: `, res);
+        resolve(res);
+      },
+      fail: function (err) {
+        console.log(`setstorage [${key}] fail: `, err);
+        resolve();
+      },
+    });
+  });
+}
+
+const removeStorageAsync = (key) => {
+  return new Promise(resolve => {
+    wx.removeStorage({
+      key,
+      success (res) {
+        console.log(`removeStorage [${key}] success: `, res);
+        resolve(res);
+      },
+      fail: function (err) {
+        console.log(`removeStorage [${key}] fail: `, err);
+        resolve();
+      },
+    });
+  });
+  
+}
 const omit = (obj, keyList) => {
   keyList = Array.isArray(keyList) ? keyList : [ keyList ];
 
@@ -124,7 +157,12 @@ const qiniuUpload = (file, token) => {
 
 const noop = function () {}
 
-const recordBookByScan = function (libId, isbn) {
+/**
+ * 录书有两种方式
+ * 扫码：ISBN -> 根据 ISBN 查是否录入 -> 爬虫拿到书的信息 -> 写数据
+ * 手动录书：根据 ISBN 查是否录入 -> 写数据
+ */
+const recordBookByScanOrHand = function (libId, isbn, book) {
   return new Promise((resolve, reject) => {
     callCloudBook({
       type: 'scan',
@@ -147,31 +185,26 @@ const recordBookByScan = function (libId, isbn) {
         });
       }
   
-      // 不存在，自动爬虫
-      callCloudBook({
-        type: 'spider',
-        data: { isbn, },
-      })
-      .then(res => {
-        if (!res || !res.success) {
-          return reject();
-        }
-  
-        // 自动写入数据
-        callCloudBook({
-          type: 'create',
-          data: { ...res.data, libId, },
-        })
-        .then(ret => {
-          if (ret && ret.success) {
-            return resolve({ 
-              data: ret.data,
-            });
+      // 3. 不存在，自动爬虫
+      (book ? Promise.resolve({ success: true, data: book }) : callCloudBook({ type: 'spider', data: { isbn, }, }))
+        .then(res => {
+          if (!res || !res.success) {
+            return reject();
           }
-  
-          reject();
+
+          // 4. 自动写入数据
+          callCloudBook({
+            type: 'create',
+            data: { ...res.data, libId, },
+          })
+          .then(ret => {
+            if (ret && ret.success) {
+              return resolve({ data: ret.data });
+            }
+    
+            reject();
+          });
         });
-      });
     });
   });
 }
@@ -183,6 +216,8 @@ module.exports = {
   formatTime: formatTime,
   scanAsync: scanAsync,
   getStorageAsync: getStorageAsync,
+  setStorageAsync: setStorageAsync,
+  removeStorageAsync: removeStorageAsync,
   chooseImageAsync: chooseImageAsync,
-  recordBookByScan: recordBookByScan,
+  recordBookByScanOrHand: recordBookByScanOrHand,
 }

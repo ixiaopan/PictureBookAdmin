@@ -1,3 +1,4 @@
+const { $Toast } = require('../../dist/base/index');
 const { callCloudBook } = require('../../utils/cloud')
 
 Page({
@@ -43,6 +44,18 @@ Page({
     wx.navigateTo({
       url: '/pages/search/index',
     });
+  },
+
+  onScanSearch: function (e) {
+    const isbn = e.detail;
+
+    if (!isbn) {
+      return $Toast({  content: '扫码失败，请重试!', type: 'error', });
+    }
+
+    wx.navigateTo({
+      url: '/pages/search/index?isbn=' + isbn,
+    })
   },
 
   fetchBookList: function (params) {

@@ -1,23 +1,7 @@
 <view class="search-page">
-  <view class="search-searchbar">
-    <searchbar inputVal="{{ inputName }}" bindsearchinput="onSearchInput" bindsearchblur="onSearchBlur" />
-  
-    <view wx:if="{{ !inputName }}" class="search-history">
-      <view wx:if="{{ historyList && historyList.length }}" class="search-history-clear" bindtap="clearSearchHistory">清楚记录</view>
+  <searchbar bindsearch="onSeach" dynamic editing="{{ editing }}" autofocus="{{ autofocus }}" />
 
-      <view 
-        wx:for="{{ historyList }}" 
-        bindtap="searchByHistoryKeyword" 
-        wx:key="index"
-        class="row-center search-history-item"
-        data-index="{{ index }}"
-      >
-        <text class="search-history-text" >{{ item }}</text>
-      </view>
-    </view>
-  </view>
-
-  <block wx:if="{{ inputName && searchedName }}">
+  <view class="search-content">
     <view class="search-result">
       <text class="search-result-title">馆内结果</text>
 
@@ -30,15 +14,19 @@
           bindbooktap="onBookTap"
         />
       </view>
-
-      <view wx:else class="search-result-empty">书馆内找不到此书~</view>
+  
+      <view wx:else class="col-center search-result-empty">书馆内找不到此书~</view>
     </view>
 
-    <view class="search-result search-outer-result">
+    <!-- <view class="search-result search-outer-result">
       <text class="search-result-title">馆外结果</text>
       <view class="search-result-list"></view>
+    </view> -->
+
+    <view wx:if="{{ resultList && resultList.length }}"  class="row-center loadmore-end">
+      <text class="loadmore-text">我是有底线的</text>
     </view>
-  </block>
+  </view>
 
   <i-spin i-class="col-center loading-page search-loading" fix size="large" wx:if="{{ loading }}"></i-spin>
 </view>

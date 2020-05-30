@@ -1,9 +1,52 @@
-<view class="search-bar i-class">
-  <view class="search-bar-inner" bindtap="onBarTap">
-    <view class="search-bar-scan">
-      <image src="/images/scan.png" class="search-bar-scan-icon" bindtap="goScan"></image>
+<view class="search-bar-wrap {{ dynamic ? 'search-bar-wrap-dynamic' : '' }} i-class">
+  <view class="search-bar-row">
+    <view class="search-bar">
+      <view class="search-bar-inner">
+        <view wx:if="{{ !dynamic }}" class="search-bar-scan" bindtap="onScanTap">
+          <image src="/images/scan.png" class="search-bar-scan-icon"></image>
+        </view>
+
+        <text wx:if="{{ !dynamic }}" bindtap="onBarTap" class="search-bar-input" >请输入书名搜索</text>
+
+        <input wx:else 
+          value="{{ inputVal }}" 
+          focus="{{ focused }}"
+          placeholder="请输入书名搜索" 
+          placeholder-class="search-bar-placeholder" class="search-bar-input"
+          bindfocus="onFocus" 
+          bindblur="onBlur"
+          bindinput="onInput"
+          bindconfirm="onConfirm"
+          confirm-type="search"
+        ></input>
+
+        <view wx:if="{{ dynamic && inputVal }}" class="search-clear" bindtap="onClearInput">
+          <i-icon class="search-clear-icon" type="close" size="12"  color="#fff" />
+        </view>
+      </view>
     </view>
 
-    <input value="{{ inputVal }}" placeholder="请输入书名或者扫码搜索" placeholder-class="search-bar-placeholder" class="search-bar-input" bindblur="onSearch" bindinput="onInput"></input>
+    <view wx:if="{{ dynamic && editing }}" class="search-bar-cancel" bindtap="onEditCancel">取消</view>
+  </view>
+
+  <view wx:if="{{ dynamic }}" class="search-history {{ editing ? 'search-history-visible' : '' }}">
+    <block wx:if="{{ historyList && historyList.length }}">
+      <view class="search-history-head">
+        <text class="search-history-head-title">搜索历史</text>
+        <view class="search-history-clear" bindtap="clearSearchHistory">清除记录</view>
+      </view>
+
+      <view class="search-history-list">
+        <view 
+          wx:for="{{ historyList }}" 
+          wx:key="index"
+          data-index="{{ index }}"
+          class="row-center search-history-item"
+          bindtap="searchByHistoryKeyword" 
+        >
+          {{ item }}
+        </view>
+      </view>
+    </block>
   </view>
 </view>

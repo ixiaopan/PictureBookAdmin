@@ -230,7 +230,7 @@ async function queryBookList({ libId, page = 1, pageSize = 10, sortField = '', s
 }
 
 /**
- * 扫码查询，在不在数据库
+ * 扫码拿到 ISBN 查询，在不在数据库
  * {
  *   libId: ''
  *   isbn: '',

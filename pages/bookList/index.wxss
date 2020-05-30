@@ -2,16 +2,6 @@
   padding-bottom: 32rpx;
 }
 
-.bookshelf-searchbar {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-
-  padding: 32rpx;
-  background-color: #fff;
-}
-
 /*  */
 .bookshelf-filter {
   display: flex;

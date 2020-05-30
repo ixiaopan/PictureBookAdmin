@@ -12,6 +12,7 @@ App({
   globalData: {
     userInfo: {},
     libraryInfo: {},
+    windowHeight: 320,
   },
 
   updateLibraryInfo: function (data) {

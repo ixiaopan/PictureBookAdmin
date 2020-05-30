@@ -195,6 +195,8 @@ text {
   height: 44rpx;
 }
 .loadmore-end {
+  margin-top: 24rpx;
+
   background-image: linear-gradient(90deg, transparent, transparent 15%, rgb(206, 206, 206) 15%, rgb(206, 206, 206) 38%, transparent 38%, transparent 62%, rgb(206, 206, 206) 62%, rgb(206, 206, 206) 85%, transparent 85%, transparent);
   background-size: 100% 2rpx;
   background-repeat: no-repeat;

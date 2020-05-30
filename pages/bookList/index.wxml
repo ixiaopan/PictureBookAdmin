@@ -1,8 +1,9 @@
 <view class="bookshelf-page">
   <!-- 搜索 -->
-  <view class="bookshelf-searchbar">
-    <searchbar bindbartap="onBarTap" />
-  </view>
+  <searchbar 
+    bindbartap="onBarTap"
+    bindscansearch="onScanSearch"
+  />
 
   <!-- 筛选 -->
   <view class="bookshelf-filter">
@@ -18,7 +19,7 @@
     <block>
       <view class="col-center bookshelf-empty" wx:if="{{ !bookList || bookList.length == 0}}">
         <image src="/images/empty.png" class="bookshelf-empty-icon" />
-        空空如也，赶快去录入书籍吧！
+        空空如也，赶快去『首页』录入书籍吧！
       </view>
 
       <book-item 
@@ -40,4 +41,6 @@
       </view>
     </block>
   </view>
+
+  <i-toast id="toast" />
 </view>

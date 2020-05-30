@@ -3,6 +3,7 @@
   "usingComponents": {
     "searchbar": "../../components/searchbar/searchbar",
     "book-item": "../../components/book-item/book-item",
-    "i-spin": "../../dist/spin/index"
+    "i-spin": "../../dist/spin/index",
+    "i-toast": "../../dist/toast/index"
   }
 }

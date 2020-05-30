@@ -40,11 +40,9 @@ Page({
         confirmText: '复制',
         success (res) {
           if (res.confirm) {
-            wx.setClipboardData({
-              data: fileUrl,
-            });
+            wx.setClipboardData({ data: fileUrl, });
           }
-        }
+        },
       });
     });
   },

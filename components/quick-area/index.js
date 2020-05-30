@@ -24,7 +24,7 @@ Component({
         type: 'forward',
         title: '敬请期待',
         image: '/images/forward-fill.png',
-      }
+      },
     },
   },
 

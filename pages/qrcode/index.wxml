@@ -1,0 +1,5 @@
+<view class="col-center qrcode-page">
+  <view class="qrcode-canvas" style="width: {{ canvasW }}px; padding-top: {{ canvasH }}px;">
+    <canvas type="2d" id="my-canvas"></canvas>
+  </view>
+</view>

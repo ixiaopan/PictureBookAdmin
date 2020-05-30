@@ -1,5 +1,5 @@
 const { DEFAULT_LIBRARY_LOGO, } = require('../../utils/config');
-const { callCloudBook, } = require('../../utils/cloud');
+const { callCloudLibrary } = require('../../utils/cloud');
 
 Page({
   data: {
@@ -24,15 +24,21 @@ Page({
 
     wx.showLoading({ title: '正在导出', });
 
-    callCloudBook({
+    callCloudLibrary({
       type: 'export',
       data: { libId: this.data.libraryInfo.libId },
     }).then(res => {
-      const { fileUrl } = res.data || {};
+      this.exporting = false;
 
       wx.hideLoading();
 
-      this.exporting = false;
+      if (!res || !res.data || !res.data.fileUrl) {
+        return wx.showToast({
+          title: '导出失败，请重试~',
+        });
+      }
+
+      const { fileUrl } = res.data;
 
       wx.showModal({
         content: '文件已导出到 ' + fileUrl,

@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/welcome/index",
+    "pages/qrcode/index",
     "pages/search/index",
     "pages/home/index",
     "pages/user/index",

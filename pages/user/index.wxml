@@ -11,7 +11,7 @@
 
   <i-panel i-class="user-list-panel" hide-border>
     <i-cell-group>
-      <i-cell class="user-list-item" title="书馆二维码"></i-cell>
+      <i-cell is-link  class="user-list-item" url="/pages/qrcode/index" title="书馆二维码"></i-cell>
       <i-cell is-link title="导出数据" bindclick="exportData"></i-cell>
     </i-cell-group>
   </i-panel>

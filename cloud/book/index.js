@@ -1,6 +1,5 @@
 const cloud = require('wx-server-sdk')
 const rp = require('request-promise')
-const xlsx = require('node-xlsx');
 
 cloud.init()
 
@@ -269,53 +268,7 @@ async function queryBookListBySearch({ libId, bookname } = {}) {
   }
 }
 
-const exportLibrary = async function ({ libId } = {}) {
-  try {
-    const bookListRef = await getBookListRefInLibrary(libId);
-    let allBooks = await bookListRef.get();
-    allBooks = allBooks.data;
 
-    if (!allBooks || !allBooks.length) {
-      return;
-    }
-
-    // 1.
-    let cvsFileName = libId + '.xlsx';
-    const rowFields = ['isbn', 'title', 'cover', 'price', 'author', 'translator', 'pubdate', 'publisher', 'pages', 'author_intro', 'summary', 'rate', 'numRaters'];
-    const rowHeader = ['isbn', '名称', '封面', '价格', '作者', '译者', '出版时间', '出版社', '总页数', '作者简介', '内容简介', '评分', '评价人数'];
-
-    // 2.
-    const table = allBooks.reduce((memo, book) => {
-      const record = rowFields.map(key => book[key]);
-
-      memo.push(record);
-
-      return memo;
-    }, []);
-    table.unshift(rowHeader);
-
-    // 
-    const buffer = await xlsx.build([{
-      name: 'sheet',
-      data: table,
-    }]);
-    const result =  await cloud.uploadFile({
-      cloudPath: cvsFileName,
-      fileContent: buffer,
-    });
-
-    // 
-    const { fileID } = result || {};
-    const res = await cloud.getTempFileURL({
-      fileList: [ fileID ],
-    });
-    const { tempFileURL } = res.fileList[0] || {};
-
-    return { success: true, data: { fileUrl: tempFileURL }, };
-  } catch (e) {
-    console.error('[cloud] [exportLibrary] fail: ', e);
-  }
-}
 
 exports.main = async (event) => {
   const { type, data } = event || {};
@@ -347,10 +300,7 @@ exports.main = async (event) => {
     
     case 'search':
       return queryBookListBySearch(data);
-
-    case 'export':
-      return exportLibrary(data);
-
+    
     default:
-  }  
+  }
 };

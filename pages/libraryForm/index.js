@@ -105,8 +105,11 @@ Page({
 
     new Promise(resolve => {
       if (previewSrc) {  // 手动选择了，更新 fileId
-        return callCloudQiniuToken().then(token => {
-          resolve(qiniuUpload(previewSrc[0], token))
+        // const keyToOverwrite = updateLibMode ? libraryFormValue.libId + '/logo' : 'previewSrc[0].split("//")[1]';
+        const keyToOverwrite = updateLibMode ? libraryFormValue.libId + '/logo' : 'None';
+
+        return callCloudQiniuToken({ data: { keyToOverwrite }}).then(token => {
+          resolve(qiniuUpload(previewSrc[0], token, keyToOverwrite));
         });
       }
 

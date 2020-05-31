@@ -146,7 +146,8 @@ const qiniuUpload = (file, token, filename) => {
       (error) => {
         console.error('error: ', error);
       },
-      null,
+      // null,
+      { key: filename, region: options.region },
       (progress) => {
         console.log('上传进度', progress.progress);
         console.log('已经上传的数据长度', progress.totalBytesSent);

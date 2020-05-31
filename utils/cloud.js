@@ -64,10 +64,10 @@ const callCloudBook = ({ type, data } = {}) => {
   });
 }
 
-const callCloudQiniuToken = () => {
+const callCloudQiniuToken = ({ data } = {}) => {
   return wx.cloud.callFunction({
-    name: 'qiniu-token',
-    data: {},
+    name: 'token',
+    data: { data },
   })
   .then(res => {
     console.log(`[cloud] [qiniu-token] success: `, res);

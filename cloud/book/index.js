@@ -1,7 +1,9 @@
 const cloud = require('wx-server-sdk')
 const rp = require('request-promise')
 
-cloud.init()
+cloud.init({
+  env: 'picturebook-427v3',
+});
 
 const db = cloud.database();
 

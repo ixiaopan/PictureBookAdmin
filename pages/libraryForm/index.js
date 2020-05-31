@@ -113,8 +113,6 @@ Page({
       resolve(defaultSrc);
     })
     .then(cover => {
-      console.log('library cover: ', cover);
-
       const params = {
         cover, title, 
         contact, telephone, address,

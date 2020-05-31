@@ -126,7 +126,7 @@ const omit = (obj, keyList) => {
   return nextObj;
 }
 
-const qiniuUpload = (file, token) => {
+const qiniuUpload = (file, token, filename) => {
   const options = {
     region: 'ECN',
     uptoken: token,

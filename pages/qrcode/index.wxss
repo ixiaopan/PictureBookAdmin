@@ -6,7 +6,6 @@
   position: relative;
   width: 50%;
   height: 0;
-  margin-top: -100rpx;
 }
 
 canvas {

@@ -155,7 +155,12 @@ Page({
 
     new Promise(resolve => {
       if (this.data.previewSrc) { // 说明是手动上传了
-        return callCloudQiniuToken().then(token => { resolve(qiniuUpload(this.data.previewSrc[0], token)); });
+        const keyToOverwrite = this.libId + '/' + isbn;
+
+        return callCloudQiniuToken({
+          type: 'token',
+          data: { keyToOverwrite, }
+        }).then(token => { resolve(qiniuUpload(this.data.previewSrc[0], token, keyToOverwrite)); });
       }
 
       resolve(this.data.scan.cover);
@@ -181,11 +186,17 @@ Page({
 
       // 修改模式
       if (this.data.bookid) {
-        return callCloudBook({ type: 'update', data: params, }).then(res => {
+        return callCloudBook({ type: 'update', data: params, }).then(async res => {
           if (!res || !res.success) {
             return this.showError(res);
           }
   
+          // 更新下才主动刷新 CDN
+          await callCloudQiniuToken({
+            type: 'refresh',
+            data: [ cover ]
+          });
+
           this.showSuccess();
         });
       }

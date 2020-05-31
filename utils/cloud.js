@@ -64,17 +64,17 @@ const callCloudBook = ({ type, data } = {}) => {
   });
 }
 
-const callCloudQiniuToken = ({ data } = {}) => {
+const callCloudQiniuToken = ({ type, data } = {}) => {
   return wx.cloud.callFunction({
     name: 'token',
-    data: { data },
+    data: { type, data },
   })
   .then(res => {
-    console.log(`[cloud] [qiniu-token] success: `, res);
-    return res.result;
+    console.log(`[cloud] [qiniu-token] ${type} success: `, res);
+    return res && res.result;
   })
   .catch(err => {
-    console.log(`[cloud] [qiniu-token] fail: `, err);
+    console.log(`[cloud] [qiniu-token] ${type} fail: `, err);
   });
 }
 

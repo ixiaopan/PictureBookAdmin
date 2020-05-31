@@ -105,10 +105,12 @@ Page({
 
     new Promise(resolve => {
       if (previewSrc) {  // 手动选择了，更新 fileId
-        // const keyToOverwrite = updateLibMode ? libraryFormValue.libId + '/logo' : 'previewSrc[0].split("//")[1]';
-        const keyToOverwrite = updateLibMode ? libraryFormValue.libId + '/logo' : 'None';
+        const keyToOverwrite = updateLibMode ? libraryFormValue.libId + '/logo' : previewSrc[0].split('//')[1];
 
-        return callCloudQiniuToken({ data: { keyToOverwrite }}).then(token => {
+        return callCloudQiniuToken({ 
+          type: 'token',
+          data: { keyToOverwrite }
+        }).then(token => {
           resolve(qiniuUpload(previewSrc[0], token, keyToOverwrite));
         });
       }
@@ -129,10 +131,16 @@ Page({
             ...params,
           },
         })
-        .then(res => {
+        .then(async res => {
           if (!res || !res.success) {
             return this.showError(res);
           }
+
+          // 更新下才主动刷新 CDN
+          await callCloudQiniuToken({
+            type: 'refresh',
+            data: [ cover ]
+          });
 
           wx.hideLoading();
           

@@ -14,7 +14,11 @@
     </view>
 
     <!-- 作者 年月日 出版社 -->
-    <text class="book-item-author">{{ book.author }} / {{ book.pubdate }} / {{ book.publisher }}</text>
+    <text class="book-item-author">
+      {{ book.author }} 
+      <block wx:if="{{ book.pubdate }}">/ {{ book.pubdate }}</block>
+      <block wx:if="{{ book.publisher }}">/ {{ book.publisher }}</block>
+    </text>
 
     <!-- 信息完整度 -->
     <view class="book-item-complete" >

@@ -270,8 +270,6 @@ async function queryBookListBySearch({ libId, bookname } = {}) {
   }
 }
 
-
-
 exports.main = async (event) => {
   const { type, data } = event || {};
 

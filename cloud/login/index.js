@@ -7,45 +7,42 @@ cloud.init({
 const db = cloud.database();
 const userDB = db.collection('users');
 
-exports.main = async (event, context) => {
+const systemError = {
+  success: false, 
+  errCode: 60001, 
+  errMsg: '系统错误，请重试~',
+};
+
+exports.main = async () => {
   const wxContext = cloud.getWXContext();
   const openid = wxContext.OPENID;
 
-  // 1. 
-  const userRes = await userDB.where({ _openid: openid, }).get();
+  // 1.
+  try {
+    // 1.1 
+    const userRes = await userDB.where({ _openid: openid, }).get();
 
-  // { data: [], errMsg: 'collection.get:ok' }
-  console.log('查询用户信息: ', userRes);
+    let userDoc = userRes.data[0];
 
-  let userDoc = userRes.data[0];
-
-  if (!userDoc) {
-    try {
+    // 1.2 create it if the user does not exist
+    if (!userDoc) {
       userDoc = await userDB.add({
         data: { 
-          _openid: openid, 
+          _openid: openid,
           library: '', // current library
-          libraries: [],
+          libraries: [], // one can have many libraries
         },
       });
-  
-      // { _id: '', errMsg: 'collection.add:ok' }
-      console.log('[create user] success: ', userDoc);
-    } catch (e) {
-      console.log('[create user] fail: ', e);
     }
+  } catch(error) {
+    console.log('[create/get user] fail: ', error);
+    return systemError;
   }
 
-  // 创建失败 => 前端显示【错误页面】
-  if (!userDoc) {
-    return { 
-      errCode: 10, 
-      success: false, 
-      msg: '系统错误，请重试~',
-    };
-  }
+  // { _id: '', errMsg: 'collection.add:ok' }
+  console.log('[create/get user] success: ', userDoc);
 
-  // 2. 新用户 => 前端显示【创建页面】
+  // 2. 从未拥有过书馆 => 前端显示【创建书馆页面】
   if (!userDoc.library) return {
     success: true,
     data: {
@@ -55,33 +52,26 @@ exports.main = async (event, context) => {
     },
   };
 
-  // 3. 查询书馆
+  // 3. 查询用户当前书馆(one can own more than one libraries)
   let libraryDoc = null;
   try { // 默认情况下，如果获取不到记录，方法会抛出异常
     libraryDoc = await db.collection('libraries').doc(userDoc.library).get();
-  } catch (e) {}
-
-  // { data: { _id: '', address: '' } }
-  console.log('查询书馆信息: ', libraryDoc);
-
-  // 4. 查询书馆异常 => 前端显示【错误页面】
-  if (!libraryDoc) {
-    return { 
-      errCode: 10, 
-      success: false, 
-      msg: '系统错误，请重试~',
-    };
+  } catch (error) {
+    console.error('[get library] fail: ', error);
+    return systemError;
   }
 
-  // 5. 自定义数据字段 => 前端显示【首页】
+  // { data: { _id: '', address: '' } }
+  console.log('[get library] success: ', libraryDoc);
+
   const { 
     _id: libId, 
     title, cover,
-    address, contact, telephone,
+    address, contact, telephone, 
     book_count,
   } = libraryDoc.data || {};
 
-  const { _id: uid, library, libraries, nickName = '', avatarUrl = '', } = userDoc;
+  const { _id: uid, nickName = '', avatarUrl = '', library, libraries, } = userDoc;
 
   return {
     success: true,

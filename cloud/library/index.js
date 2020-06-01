@@ -137,6 +137,9 @@ async function createQRCode ({ libId } = {}) {
   }
 }
 
+/**
+ * 导出书馆数据
+ */
 const exportLibrary = async function ({ libId } = {}) {
   try {
     const libRes = await libraryDB.where({ _id: libId }).get();
@@ -147,8 +150,8 @@ const exportLibrary = async function ({ libId } = {}) {
 
     allBooks = allBooks.data;
 
-    if (!allBooks || !allBooks.length) {
-      return;
+    if (!allBooks.length) {
+      return { success: true, data: null, };
     }
 
     // 1.

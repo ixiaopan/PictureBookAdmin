@@ -6,10 +6,6 @@ const callCloudLogin = () => {
   .then(res => {
     const { result } = res || {};
 
-    if (!result || !result.success) {
-      console.log('[cloud] [login] empty');
-    }
-
     console.log('[cloud] [login] success: ', result);
 
     return result;
@@ -22,17 +18,10 @@ const callCloudLogin = () => {
 const callCloudLibrary = ({ type, data } = {}) => {
   return wx.cloud.callFunction({
     name: 'library',
-    data: {
-      type, 
-      data,
-    },
+    data: { type, data, },
   })
   .then(res => {
     const { result } =  res || {};
-
-    if (!result || !result.success) {
-      console.log('[cloud] [library] empty');
-    }
 
     console.log(`[cloud] [library] [${type}] success: `, result);
 
@@ -51,10 +40,6 @@ const callCloudBook = ({ type, data } = {}) => {
   .then(res => {
     const { result } =  res || {};
 
-    if (!result || !result.success) {
-      console.log(`[cloud] [book] [${type}] empty`);
-    }
-
     console.log(`[cloud] [book] [${type}] success: `, result);
 
     return result;
@@ -70,11 +55,14 @@ const callCloudQiniuToken = ({ type, data } = {}) => {
     data: { type, data },
   })
   .then(res => {
+    const { result } =  res || {};
+
     console.log(`[cloud] [qiniu-token] ${type} success: `, res);
-    return res && res.result;
+
+    return result;
   })
   .catch(err => {
-    console.log(`[cloud] [qiniu-token] ${type} fail: `, err);
+    console.log(`[cloud] [qiniu-token] ${type} catct: `, err);
   });
 }
 

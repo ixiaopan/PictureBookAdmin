@@ -1,3 +1,5 @@
+const { $Toast } = require('../../dist/base/index');
+
 const { DEFAULT_LIBRARY_LOGO, } = require('../../utils/config');
 const { callCloudLibrary } = require('../../utils/cloud');
 
@@ -32,10 +34,12 @@ Page({
 
       wx.hideLoading();
 
-      if (!res || !res.data || !res.data.fileUrl) {
-        return wx.showToast({
-          title: '导出失败，请重试~',
-        });
+      if (!res || !res.success) {
+        return $Toast({  content: '导出失败，请重试~', type: 'error', });
+      }
+
+      if (!res.data) {
+        return $Toast({ content: '书馆还没有任何书哦~', type: 'warning', });
       }
 
       const { fileUrl } = res.data;

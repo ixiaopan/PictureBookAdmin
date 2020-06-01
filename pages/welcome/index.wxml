@@ -1,9 +1,15 @@
 <view class="welcome-page">
   <!-- 加载页 -->
-  <i-spin i-class="loading-page" size="large" fix wx:if="{{ loading }}"></i-spin>
+  <i-spin wx:if="{{ loading }}" i-class="loading-page" size="large" fix></i-spin>
+
+  <!-- 错误页面 -->
+  <view wx:elif="{{ error }}" class="col-center error-page">
+    <image src="/images/error.png" class="error-icon"></image>
+      忙不过来了~
+    </view>
   
   <!-- 欢迎页 -->
-  <view class="col-center welcome-landing">
+  <view wx:else class="col-center welcome-landing">
     <image src="{{ landingPoster }}" class="welcome-poster" mode="aspectFill"></image>
     <text class="welcome-title">欢迎使用</text>
     <text class="welcome-desc">开始创建你的第一个图书馆吧！</text>

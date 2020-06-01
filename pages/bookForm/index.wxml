@@ -18,7 +18,7 @@
 
     <view class="row-start-center form-item-item">
       <text class="form-item-label">ISBN</text>
-      <input type="number" value="{{ scan.isbn }}" bindinput="onInput" data-type="isbn" name="isbn" placeholder="必填, 请扫描或者输入ISBN" placeholder-class="form-item-placeholder" class="form-item-input"></input>
+      <input type="number" value="{{ isbn || scan.isbn }}" bindinput="onInput" data-type="isbn" name="isbn" placeholder="必填, 请扫描或者输入ISBN" placeholder-class="form-item-placeholder" class="form-item-input"></input>
       <image class="record-scan" src="/images/scan.png" data-type="isbn" bindtap="onScanCode"></image>
       <view class="form-item-hairline"></view>
     </view>

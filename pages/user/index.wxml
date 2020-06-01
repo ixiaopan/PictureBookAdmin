@@ -18,4 +18,6 @@
 
   <!-- TODO: -->
   <!-- <button class="row-center theme-button" hover-class="button-hover">切换到读者版本</button> -->
+
+  <i-toast id="toast" />
 </view>

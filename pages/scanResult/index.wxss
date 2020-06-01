@@ -6,3 +6,6 @@
 .scan-result-text {
   font-size: 28rpx;
 }
+.scan-result-shelf-button {
+  margin-top: 60rpx !important;
+}

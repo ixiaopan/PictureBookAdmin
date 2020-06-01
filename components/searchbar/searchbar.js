@@ -109,6 +109,7 @@ Component({
       // 取前8个
       nextHistoryList = nextHistoryList.slice(0, 8);
 
+      // don't care fail or not
       setStorageAsync(CACHE_KEY_MAP.SEARCH_HISTORY, JSON.stringify(nextHistoryList));
 
       // 2.

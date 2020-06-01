@@ -1,5 +1,5 @@
 const { $Toast } = require('../../dist/base/index');
-const { chooseImageAsync, qiniuUpload } = require('../../utils/util');
+const { chooseImageAsync, qiniuUpload, getUrlVersion, removeUrlVersion, increateUrlVersion } = require('../../utils/util');
 const { DEFAULT_LIBRARY_LOGO, } = require('../../utils/config');
 const { 
   callCloudLibrary,
@@ -103,26 +103,42 @@ Page({
 
     wx.showLoading({ title: updateLibMode ? '正在保存' : '正在创建' });
 
-    new Promise(resolve => {
+    new Promise(async (resolve) => {
       if (previewSrc) {  // 手动选择了，更新 fileId
+        // 同名覆盖上传，一个书馆的图片路径是唯一的
         const keyToOverwrite = updateLibMode ? libraryFormValue.libId + '/logo' : previewSrc[0].split('//')[1];
 
-        return callCloudQiniuToken({ 
+        const token = await callCloudQiniuToken({
           type: 'token',
-          data: { keyToOverwrite }
-        }).then(token => {
-          resolve(qiniuUpload(previewSrc[0], token, keyToOverwrite));
-        });
+          data: { keyToOverwrite, }
+        })
+
+        // 上传失败则是空的
+        const fileUrl = await qiniuUpload(previewSrc[0], token, keyToOverwrite);
+
+        // 如果不是修改模式，这个就是 0；如果是修改模式，这个就是当前的版本
+        const { v = 0 } = getUrlVersion(libraryFormValue.cover);
+
+        // 版本加1强制清除CDN
+        resolve(increateUrlVersion(fileUrl, v));
       }
 
       resolve(defaultSrc);
     })
     .then(cover => {
+      console.log('final library url: ', cover);
+
+      // 由上传失败，带过来的空值
+      if (!cover) { 
+        return this.showError();
+      }
+
       const params = {
         cover, title, 
         contact, telephone, address,
       };
 
+      // 修改模式
       if (updateLibMode) {
         callCloudLibrary({
           type: 'update',
@@ -136,25 +152,24 @@ Page({
             return this.showError(res);
           }
 
-          // 更新下才主动刷新 CDN
+          // 更新下才主动刷新 CDN, don't care fail or not
           await callCloudQiniuToken({
             type: 'refresh',
-            data: [ cover ]
+            data: {
+              imageUrlList: [ removeUrlVersion(cover) ],
+            },
           });
 
-          wx.hideLoading();
-          
-          wx.showToast({ title: '保存成功', });
-          
           // 更新全局书馆信息
           App.updateLibraryInfo(params);
 
-          setTimeout(() => { wx.navigateBack(); }, 1000);
+          this.showSuccess();
         });
 
         return;
       }
 
+      // 创建模式
       callCloudLibrary({
         type: 'create',
         data: { 
@@ -179,6 +194,14 @@ Page({
     });
   },
 
+  showSuccess: function () {
+    wx.hideLoading();
+
+    wx.showToast({ title: '保存成功', });
+
+    setTimeout(() => wx.navigateBack(), 1000);
+  },
+
   showError: function (err) {
     wx.hideLoading();
 
@@ -190,5 +213,5 @@ Page({
       content: err && err.msg || (this.data.updateLibMode ? '修改失败，请重试!' : '创建失败，请重试!'), 
       type: 'error',
     });
-  }
+  },
 });

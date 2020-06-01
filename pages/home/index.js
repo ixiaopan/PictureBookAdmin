@@ -1,9 +1,5 @@
-const { $Toast } = require('../../dist/base/index');
-
 Page({
-  data: {
-    loading: false,
-  },
+  data: {},
 
   onShow() {
     const { title = '' } = getApp().globalData.libraryInfo || {};
@@ -13,13 +9,10 @@ Page({
   onScanTap: function (e) {
     const { isbn } = e.detail;
 
-    if (!isbn) {
-      return $Toast({ content: '扫描失败，请重试!', type: 'error', });
-    }
+    if (!isbn) return;
 
     wx.navigateTo({
       url: `/pages/scanResult/index?isbn=${isbn}`,
     });
   },
 });
-

@@ -1,39 +1,37 @@
-const { 
-  callCloudLibrary
-} = require('../../utils/cloud');
+const { callCloudLibrary } = require('../../utils/cloud');
 
 Page({
   data: {
+    loading: true,
     canvasW: 0,
     canvasH: 0,
-    libraryInfo: {},
   },
 
   ctx: null,
   canvas: null,
   pixelRatio: 1,
+  libraryInfo: {},
 
   onLoad() {
-    this.setData({
-      libraryInfo: getApp().globalData.libraryInfo,
-    });
+    this.libraryInfo = getApp().globalData.libraryInfo;
   },
 
   onReady() {
     // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D
     this.getContext().then(async ({ ctx, canvas, pixelRatio } = {}) => {
-      this.canvas = canvas;
       this.ctx = ctx;
+      this.canvas = canvas;
       this.pixelRatio = pixelRatio;
 
-      // 1.
+      // 1. 画背景
       ctx.beginPath();
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 2.
+      // 2. 画官方二维码
       const officialImage = await this.drawOfficialQRCode();
 
+      // TODO: 
       // 3. 
       // this.drawLogo(officialImage);
 
@@ -50,6 +48,7 @@ Page({
     const canvasW = windowWidth * 0.8;
     const canvasH = windowWidth * 0.8 * scale;
 
+    // 看到的大小
     this.setData({ canvasW, canvasH, });
 
     return new Promise(resolve => {
@@ -104,40 +103,60 @@ Page({
     wx.canvasToTempFilePath({
       canvas: this.canvas,
       success: (res) => {
-        console.log('canvasToTempFilePath： ', res);
-  
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success() {
-            wx.showToast({ title: '保存成功', });
-          },
-          fail(err) {
-            if (/fail(.)*auth/.test(err.errMsg)) {
-              wx.showModal({
-                title: '提示',
-                content: '您未授权读取相册，请点击底部按钮打开授权！',
-                success(res) {
-                  if (res.confirm) {
-                    wx.openSetting({
-                      success(settingdata) {
-                        if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                          wx.showToast({ title: '可以保存二维码啦~', icon: 'none' });
-                        } else {
-                          wx.showToast({ title: '保存失败，请重试~', icon: 'none' });
-                        }
-                      },
-                    });
-                  }
-                },
-              });
-            }
-          },
-        });
+        this.startSaveToAlbum(res.tempFilePath);
       },
-      fail: (err) => {
-        console.log(err);
+      fail: () => {
+        this.showError();
       },
     });
+  },
+
+  startSaveToAlbum: function (filePath) {
+    wx.saveImageToPhotosAlbum({
+      filePath,
+      success() {
+        this.showSuccess();
+      },
+      fail(err) {
+        if (/fail(.)*auth/.test(err.errMsg)) {
+          return this.tryAuthAlbum();
+        }
+
+        this.showError();
+      },
+    });
+  },
+
+  tryAuthAlbum: function () {
+    wx.showModal({
+      title: '提示',
+      content: '您未授权读取相册，请点击底部按钮打开授权！',
+      success(res) {
+        if (res.confirm) {
+          this.openSetting();
+        }
+      },
+    });
+  },
+
+  openSetting: function () {
+    wx.openSetting({
+      success(settingdata) {
+        if (settingdata.authSetting['scope.writePhotosAlbum']) {
+          return wx.showToast({ title: '可以保存二维码啦~', icon: 'none' });
+        }
+
+        this.showError();
+      },
+    });
+  },
+
+  showSuccess: function () {
+    wx.showToast({ title: '保存成功', });
+  },
+
+  showError: function () {
+    wx.showToast({ title: '保存失败，请重试~', icon: 'none' });
   },
 
 

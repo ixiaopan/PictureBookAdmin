@@ -4,6 +4,7 @@ const App = getApp();
 
 Page({
   data: {
+    error: null,
     loading: true,
     landingPoster: WELCOME_POSTER,
   },
@@ -13,9 +14,14 @@ Page({
     App.loginPromise.then(result => {
       const { errCode, data = {} } = result || {};
 
-      // TODO: 错误提示
-      if (errCode === 10) {
-        return console.log('onload error', result);
+      // 系统出错
+      if (errCode === 60001) {
+        this.setData({
+          loading: false,
+          error: result,
+        });
+
+        return console.log('system error', result);
       }
 
       // 更新全局用户信息
@@ -24,7 +30,7 @@ Page({
       // 进入首页
       if (data && data.libraryInfo) {
         App.updateLibraryInfo(data.libraryInfo);
-   
+  
         return wx.reLaunch({ url: '/pages/home/index' });
       }
 

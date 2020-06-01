@@ -14,7 +14,8 @@
   <book-item wx:if="{{ scanBook.title }}" book="{{ scanBook }}" bindbooktap="onBookTap" />
 
   <view>
-    <button class="theme-button scan-result-continue-button" bindtap="onContinueScan">继续录入</button>
+    <button class="theme-button" bindtap="onContinueScan">继续录入</button>
+    <button class="theme-button scan-result-shelf-button" bindtap="onGoShelf">查看书柜</button>
   </view>
 
   <i-spin i-class="loading-page" fix size="large" wx:if="{{ loading }}"></i-spin>

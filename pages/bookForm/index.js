@@ -1,6 +1,10 @@
 const { $Toast } = require('../../dist/base/index');
 
-const { chooseImageAsync, scanAsync, qiniuUpload, recordBookByScanOrHand } = require('../../utils/util');
+const { 
+  chooseImageAsync, scanAsync, 
+  qiniuUpload, recordBookByScanOrHand,
+  getUrlVersion, increateUrlVersion, removeUrlVersion
+} = require('../../utils/util');
 
 const { 
   callCloudBook,
@@ -18,6 +22,7 @@ Page({
 
     // 扫码数据
     library_inner_index: '',
+    isbn: '',
 
     // 有值说明是编辑状态
     bookid: '',
@@ -48,10 +53,9 @@ Page({
   // 全局的书馆ID
   libId: '',
 
-  onLoad(query) {
+  async onLoad(query) {
     const { bookid } = query || {};
 
-    // 缓存全局的书馆信息
     this.libId = getApp().globalData.libraryInfo.libId;
 
     // -- 1. 修改
@@ -60,38 +64,37 @@ Page({
         title: '修改书本信息',
       });
 
-      callCloudBook({
+      const res = await callCloudBook({
         type: 'detail',
         data: {
           libId: this.libId,
           _id: bookid,
         },
       })
-      .then(res => {
-        if (!res || !res.success || !res.data) {
-          this.setData({ loading: false, });
 
-          $Toast({ content: '查询失败，请重试!', type: 'error', });
+      if (!res || !res.success || !res.data) {
+        this.setData({ loading: false, });
 
-          setTimeout(() => { wx.navigateBack(); }, 1000);
+        $Toast({ content: '查询失败，请重试!', type: 'error', });
 
-          return;
-        }
+        setTimeout(() => { wx.navigateBack(); }, 1000);
 
-        this.setData({ 
-          bookid,
-          loading: false,
-          scan: res.data,
-          disabled: !(this.requiredFields.every(field => res.data[field]) && !!res.data.cover),
-        });
+        return;
+      }
 
-        this.requiredFields.forEach(key => this.formData[key] = res.data[key]);
+      this.setData({ 
+        bookid,
+        loading: false,
+        scan: res.data,
+        disabled: !(this.requiredFields.every(field => res.data[field]) && !!res.data.cover),
       });
+
+      this.requiredFields.forEach(key => this.formData[key] = res.data[key]);
 
       return;
     }
 
-    // -- 2. 是手动录入的
+    // -- 2. 手动录入
     wx.setNavigationBarTitle({
       title: '录入书本信息',
     });
@@ -102,10 +105,7 @@ Page({
     const { type } = e.currentTarget.dataset || {};
 
     scanAsync().then(res => {
-      if (!res || !res.result) {
-        return $Toast({ content: '扫描失败，请重试!', type: 'error', });
-      }
-
+      if (!res || !res.result) return;
       this.setData({ [type]: res.result, });
     });
   },
@@ -153,34 +153,44 @@ Page({
 
     wx.showLoading({ title: '正在保存', });
 
-    new Promise(resolve => {
+    new Promise(async (resolve) => {
       if (this.data.previewSrc) { // 说明是手动上传了
+        // 同名覆盖上传，一本书的图片路径是唯一的
         const keyToOverwrite = this.libId + '/' + isbn;
 
-        return callCloudQiniuToken({
+        const token = await callCloudQiniuToken({
           type: 'token',
           data: { keyToOverwrite, }
-        }).then(token => { resolve(qiniuUpload(this.data.previewSrc[0], token, keyToOverwrite)); });
+        })
+
+        // 上传失败则是空的
+        const fileUrl = await qiniuUpload(this.data.previewSrc[0], token, keyToOverwrite);
+
+        // 如果不是修改模式，这个就是 0；如果是修改模式，这个就是当前的版本
+        const { v = 0 } = getUrlVersion(this.data.scan.cover);
+
+        // 版本加1强制清除CDN
+        resolve(increateUrlVersion(fileUrl, v));
       }
 
       resolve(this.data.scan.cover);
     })
     .then(cover => {
+      console.log('final book url: ', cover);
+
+      // 由上传失败，带过来的空值, 直接拒绝;
+      if (!cover) { 
+        return this.showError();
+      }
+
       const params = {
         ...(this.data.bookid ? { _id: this.data.bookid } : {}),
-
         libId: this.libId,
-
         cover,
-
         title, isbn, 
-
         library_inner_index,
-
         price, author, translator, 
-
         pubdate, publisher, pages,
-
         author_intro, summary,
       };
 
@@ -191,25 +201,29 @@ Page({
             return this.showError(res);
           }
   
-          // 更新下才主动刷新 CDN
+          // 更新下才主动刷新 CDN, don't care fail or not
           await callCloudQiniuToken({
             type: 'refresh',
-            data: [ cover ]
+            data: {
+              imageUrlList: [ removeUrlVersion(cover) ],
+            },
           });
 
           this.showSuccess();
         });
       }
 
-      recordBookByScanOrHand(this.libId, isbn, params).then(({ existed } = {}) => {
-        if (existed) {
+      // 手动创建模式
+      return recordBookByScanOrHand(this.libId, isbn, params).then(result => {
+        if (!res || !res.success) {
+          return this.showError(res);
+        }
+
+        if (res.existed) {
           return this.showError({ msg: '你已经录入过此书~'});
         }
 
         this.showSuccess();
-      })
-      .catch(err => {
-        this.showError(err);
       });
     });
   },
@@ -225,9 +239,9 @@ Page({
   showError: function (err) {
     this.locked = false;
 
-    wx.hideLoading();
-
     this.setData({ disabled: false, });
+
+    wx.hideLoading();
 
     $Toast({ content: err && err.msg || '保存失败，请重试!', type: 'error', });
   },

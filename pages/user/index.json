@@ -3,6 +3,7 @@
   "usingComponents": {
     "i-cell-group": "../../dist/cell-group/index",
     "i-panel": "../../dist/panel/index",
+    "i-toast": "../../dist/toast/index",
     "i-cell": "../../dist/cell/index"
   }
 }

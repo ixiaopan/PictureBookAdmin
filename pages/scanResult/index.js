@@ -5,13 +5,42 @@ const { scanAsync, recordBookByScanOrHand, formatTime } = require('../../utils/u
 Page({
   data: {
     loading: true,
-    scanBook: {},
     existed: false,
+    scanBook: {},
   },
 
-  onLoad: function (query) {
-    // 是从首页的『扫码录书』进来的
-    this.getBookByScanISBN((query || {}).isbn);
+  // 是从首页的『扫码录书』进来的
+  onLoad: function ({ isbn } = {}) {
+    this.getBookByScanISBN(isbn);
+  },
+
+  getBookByScanISBN: function (isbn) {
+    const libId = getApp().globalData.libraryInfo.libId;
+
+    this.setData({ loading: true, });
+
+    recordBookByScanOrHand(libId, isbn).then(res => {
+      if (!res || !res.success) {
+        return this.showError();
+      }
+
+      this.setData({ 
+        loading: false,
+        existed: !!res.existed,
+        scanBook: {
+          ...res.data,
+          _create_time: formatTime(new Date(res.data.create_time), 'YYYY-MM-DD hh:mm:ss'),
+        },
+      });
+    });
+  },
+  
+  showError: function () {
+    this.setData({ loading: false, });
+
+    $Toast({ content: '查询失败，请重试!', type: 'error', });
+
+    setTimeout(() => { wx.navigateBack(); }, 1000);
   },
 
   onBookTap: function (e) {
@@ -22,42 +51,19 @@ Page({
     });
   },
 
-  getBookByScanISBN: function (isbn) {
-    const libId = getApp().globalData.libraryInfo.libId;
-
-    this.setData({  loading: true, });
-
-    return recordBookByScanOrHand(libId, isbn)
-      .then(({ existed, data } = {}) => {
-        this.setData({ 
-          loading: false,
-          existed: !!existed,
-          scanBook: {
-            ...data,
-            _create_time: formatTime(new Date(data.create_time), 'YYYY-MM-DD hh:mm:ss'),
-          },
-        });
-      })
-      .catch(() => {
-        this.setData({ loading: false, });
-
-        $Toast({ content: '查询失败，请重试!', type: 'error', });
-
-        setTimeout(() => {
-          wx.navigateBack();
-        }, 1000);
-      });
-  },
-  
   onContinueScan: function () {
     scanAsync().then(res => {
       const isbn = (res || {}).result;
 
-      if (!isbn) {
-        return $Toast({ content: '扫描失败，请重试!', type: 'error', });
-      }
+      if (!isbn) return;
 
       this.getBookByScanISBN(isbn);
+    });
+  },
+  
+  onGoShelf: function () {
+    wx.switchTab({
+      url: '/pages/bookList/index',
     });
   },
 })

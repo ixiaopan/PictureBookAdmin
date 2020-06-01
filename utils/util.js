@@ -1,5 +1,5 @@
 const qiniuUploader = require('./qiniuUploader');
-const { QINIU_CDN } = require('./config');
+const { QINIU_CDN, } = require('./config');
 const { callCloudBook, } = require('./cloud');
 
 const formatTime = (date, fmt) => {
@@ -27,7 +27,7 @@ const formatTime = (date, fmt) => {
   return fmt;
 }
 
-const chooseImageAsync = (beforeCb) => {
+const chooseImageAsync = () => {
   return new Promise(resolve => {
     wx.chooseImage({
       count: 1,
@@ -35,10 +35,11 @@ const chooseImageAsync = (beforeCb) => {
       sourceType: ['album', 'camera'],
       success: (res) => {
         const tempFilePaths = res.tempFilePaths;
-        console.log('选择图片: ', tempFilePaths);
+        console.log('[API] [chooseImage] success: ', tempFilePaths);
         resolve(tempFilePaths);
       },
-      fail: () => {
+      fail: (err) => {
+        console.log('[API] [chooseImage] fail: ', err);
         resolve();
       },
     });
@@ -51,15 +52,15 @@ const scanAsync = () => {
       onlyFromCamera: true,
       scanType: ['barCode'],
       success: function (res) {
-        console.log('[util][scan] success: ', res);
+        console.log('[API] [scan] success: ', res);
         resolve(res);
       },
-      fail: function () {
+      fail: function (err) {
+        console.log('[API] [scan] fail: ', err);
         resolve();
       },
     });
-  });
-  
+  }); 
 }
 
 const getStorageAsync = (key) => {
@@ -67,28 +68,28 @@ const getStorageAsync = (key) => {
     wx.getStorage({
       key,
       success: (res) => {
-        console.log(`getstorage [${key}] success: `, res);
+        console.log(`[API] [getStorage] [${key}] success: `, res);
         resolve(res.data);
       },
       fail: function (err) {
-        console.log(`getstorage [${key}] fail: `, err);
+        console.log(`[API] [getStorage] [${key}] fail: `, err);
         resolve();
       },
     });
   });
 }
 
-const setStorageAsync = (key, val) => {
+const setStorageAsync = (key, data) => {
   return new Promise(resolve => {
     wx.setStorage({
       key,
-      data: val,
+      data,
       success: (res) => {
-        console.log(`setstorage [${key}] success: `, res);
+        console.log(`[API] [setStorage] [${key}] success: `, res);
         resolve(res);
       },
       fail: function (err) {
-        console.log(`setstorage [${key}] fail: `, err);
+        console.log(`[API] [setStorage] [${key}] fail: `, err);
         resolve();
       },
     });
@@ -100,11 +101,11 @@ const removeStorageAsync = (key) => {
     wx.removeStorage({
       key,
       success (res) {
-        console.log(`removeStorage [${key}] success: `, res);
+        console.log(`[API] [removeStorage] [${key}] success: `, res);
         resolve(res);
       },
       fail: function (err) {
-        console.log(`removeStorage [${key}] fail: `, err);
+        console.log(`[API] [removeStorage] [${key}] fail: `, err);
         resolve();
       },
     });
@@ -126,6 +127,59 @@ const omit = (obj, keyList) => {
   return nextObj;
 }
 
+const getUrlVersion = (cover = '') => {
+  if (!cover) return;
+
+  const [ url, search ]= ('' + cover).split('?');
+
+  // [v=1, a=2]
+  const list = (search || '').split('&');
+
+  // { v: 1, a: 2 }
+  const query = list.reduce((memo, item) => {
+    const [k, v] = item.split('=');
+    if (k) memo[k] = v;
+    return memo;
+  }, {});
+
+  return query;
+}
+
+const increateUrlVersion = (cover, v = 0) => {
+  if (!cover) return;
+
+  const [ url, search ]= ('' + cover).split('?');
+
+  const query = getUrlVersion(cover);
+  
+  query.v = parseInt(v, 10) + 1;
+
+  const rList = Object.keys(query).reduce((memo, key) => {
+    memo.push(key + '=' + query[key]);
+    return memo;
+  }, [])
+
+  return url + (rList.length ? '?' + rList.join('&') : '');
+}
+
+const removeUrlVersion = (cover) => {
+  if (!cover) return;
+
+  const [ url, search ]= ('' + cover).split('?');
+
+  const query = getUrlVersion(cover);
+
+  const rList = Object.keys(query).reduce((memo, key) => {
+    if (key !== 'v') {
+      memo.push(key + '=' + query[key]);
+    }
+
+    return memo;
+  }, [])
+
+  return url + (rList.length ? '?' + rList.join('&') : '');
+}
+
 const qiniuUpload = (file, token, filename) => {
   const options = {
     region: 'ECN',
@@ -140,10 +194,11 @@ const qiniuUpload = (file, token, filename) => {
     qiniuUploader.upload(
       file,
       (res) => {
-        console.log('fileURL: ' + res.fileURL);
+        console.log('[API] [Qiniu] fileURL: ', res.fileURL);
         resolve(res.fileURL);
       },
       (error) => {
+        resolve();
         console.error('error: ', error);
       },
       // null,
@@ -164,56 +219,41 @@ const noop = function () {}
  * 扫码：ISBN -> 根据 ISBN 查是否录入 -> 爬虫拿到书的信息 -> 写数据
  * 手动录书：根据 ISBN 查是否录入 -> 写数据
  */
-const recordBookByScanOrHand = function (libId, isbn, book) {
-  return new Promise((resolve, reject) => {
-    callCloudBook({
-      type: 'scan',
-      data: {
-        libId,
-        isbn,
-      },
-    })
-    .then(result => {
-      // 1. 查询失败
-      if (!result || !result.success) {
-        return reject();
-      }
-  
-      // 2. 数据库存在
-      if (result.data) {
-        return resolve({
-          existed: true,
-          data: result.data,
-        });
-      }
-  
-      // 3. 不存在，自动爬虫
-      (book ? Promise.resolve({ success: true, data: book }) : callCloudBook({ type: 'spider', data: { isbn, }, }))
-        .then(res => {
-          if (!res || !res.success) {
-            return reject();
-          }
+const recordBookByScanOrHand = async function (libId, isbn, book) {
+  const result = await callCloudBook({
+    type: 'scan',
+    data: { libId, isbn, },
+  });
 
-          // 4. 自动写入数据
-          callCloudBook({
-            type: 'create',
-            data: { ...res.data, libId, },
-          })
-          .then(ret => {
-            if (ret && ret.success) {
-              return resolve({ data: ret.data });
-            }
-    
-            reject();
-          });
-        });
-    });
+  // 1. 方法调用失败
+  if (!result || !result.success) {
+    return;
+  }
+
+  // 2. 数据库存在，提示已经录入
+  if (result.data) {
+    return { ...result, existed: true, };
+  }
+
+  // 3. 来自手动
+  let source = book ? { success: true, data: book } : await callCloudBook({ type: 'spider', data: { isbn }, });
+
+  // 4. 爬虫失败
+  if (!source || !source.success) return;
+
+  // 5. 自动录入数据库
+  return await callCloudBook({
+    type: 'create',
+    data: { ...res.data, libId, },
   });
 }
 
 module.exports = {
   omit: omit,
   noop: noop,
+  getUrlVersion: getUrlVersion,
+  removeUrlVersion: removeUrlVersion, 
+  increateUrlVersion: increateUrlVersion,
   qiniuUpload: qiniuUpload,
   formatTime: formatTime,
   scanAsync: scanAsync,

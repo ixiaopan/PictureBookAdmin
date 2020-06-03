@@ -1,6 +1,4 @@
 {
   "navigationBarTitleText": "书馆二维码",
-  "usingComponents": {
-    "i-spin": "../../dist/spin/index"
-  }
+  "usingComponents": {}
 }

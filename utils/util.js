@@ -244,7 +244,7 @@ const recordBookByScanOrHand = async function (libId, isbn, book) {
   // 5. 自动录入数据库
   return await callCloudBook({
     type: 'create',
-    data: { ...res.data, libId, },
+    data: { ...source.data, libId, },
   });
 }
 

@@ -1,0 +1,8 @@
+<view
+  class="i-class"
+  bindtouchstart="onTouchStart"
+  bindtouchmove="onTouchMove"
+  bindtouchend="onTouchEnd"
+>
+  <slot />
+</view>

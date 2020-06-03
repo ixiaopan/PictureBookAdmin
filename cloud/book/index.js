@@ -159,27 +159,29 @@ async function updateBook({  _id, ...rest } = {}) {
 }
 
 /**
- * TODO:
+ * 删除一本书
  * {
  *   libId: ''
  *   _id: '',
  * }
  */
-async function removeBook({ libId, _id } = {}) {
+async function deleteBook({ libId, _id } = {}) {
   try {
-    const result = await bookDB.where({ libId: libId, }).doc(_id).remove();
+    const result = await bookDB.doc(_id).remove();
 
-    // 更新书馆的字段
+    console.log('[deleteBook] result', result);
+
+    // TODO: 更新书馆的字段
     await libraryDB.doc(libId).update({ 
       data: {
-        books: _.pull(result._id),
+        books: _.pull(_id),
         book_count: _.inc(-1),
       },
     });
   
-    return { success: true };
+    return { success: true, };
   } catch (e) {
-    console.error('[removeBook] fail: ', e);
+    console.error('[deleteBook] fail: ', e);
   }
 }
 
@@ -285,9 +287,8 @@ exports.main = async (event) => {
     case 'update':
       return updateBook(data);
 
-    // TODO:
-    case 'remove':
-      return removeBook(data);
+    case 'delete':
+      return deleteBook(data);
 
     case 'query':
       return queryBookList(data);

@@ -3,6 +3,15 @@
 }
 
 /*  */
+.bookshelf-border {
+  height: 20rpx;
+  background: #efefef;
+}
+.bookshelf-filter-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 99;
+}
 .bookshelf-filter {
   display: flex;
   flex-direction: row;
@@ -10,7 +19,6 @@
   align-items: center;
 
   height: 80rpx;
-  border-top: 20rpx solid #efefef;
   background-color: #fff;
 
   background-image: linear-gradient(0, rgb(206, 206, 206), rgb(206, 206, 206) 50%, transparent 50%);

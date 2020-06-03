@@ -17,11 +17,22 @@ Page({
 
   libId: '',
 
+  deleting: false,
+
   onLoad: function () {
     this.libId = getApp().globalData.libraryInfo.libId;
 
     this.fetchBookList({
       libId: this.libId,
+    });
+  },
+
+  // 页面滚动时执行
+  onPageScroll: function (e) {
+    console.log(e);
+    
+    this.setData({
+      sticky: e.scrollTop > 60
     });
   },
 
@@ -50,7 +61,7 @@ Page({
     const isbn = e.detail;
 
     if (!isbn) {
-      return $Toast({  content: '扫码失败，请重试!', type: 'error', });
+      return;
     }
 
     wx.navigateTo({
@@ -120,17 +131,42 @@ Page({
       page: 1,
     };
 
-    console.log(params)
-
     this.fetchBookList(params);
   },
 
   onBookTap: function (e) {
-    const { _id } = e.detail || {}
+    const { _id } = e.detail || {};
 
     wx.navigateTo({
       url: `/pages/bookForm/index?bookid=${_id}`,
     });
   },
 
+  onDeleteBook: function (e) {
+    const { _id } = e.detail || {};
+
+    if (this.deleting) return;
+
+    this.deleting = true;
+
+    callCloudBook({
+      type: 'delete',
+      data: {
+        libId: this.libId,
+        _id,
+      },
+    }).then(ok => {
+      this.deleting = false;
+
+      if (!ok) {
+        return $Toast({  content: '删除失败', type: 'error', });
+      }
+
+      $Toast({  content: '删除成功', type: 'success', });
+
+      this.setData({
+        bookList: this.data.bookList.filter(item => item._id !== _id),
+      });
+    });
+  },
 })

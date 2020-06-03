@@ -1,7 +1,6 @@
 <view class="col-center qrcode-page">
   <view class="qrcode-canvas" style="width: {{ canvasW }}px; padding-top: {{ canvasH }}px;" bindlongtap="saveToAlbum">
     <canvas type="2d" canvas-id="my-canvas" id="my-canvas"></canvas>
-    <i-spin wx:if="{{ loading }}" i-class="loading-page" size="large" ></i-spin>
   </view>
 
   <button 

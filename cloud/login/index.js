@@ -18,11 +18,12 @@ exports.main = async () => {
   const openid = wxContext.OPENID;
 
   // 1.
+  let userDoc = null;
   try {
     // 1.1 
     const userRes = await userDB.where({ _openid: openid, }).get();
 
-    let userDoc = userRes.data[0];
+    userDoc = userRes.data[0];
 
     // 1.2 create it if the user does not exist
     if (!userDoc) {

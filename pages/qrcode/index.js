@@ -37,6 +37,10 @@ Page({
 
       // 4.
       // officialImage && this.drawTitle(officialImage.imageH);
+
+      if (officialImage) {
+        this.setData({ loading: false });
+      }
     });
   },
 
@@ -164,7 +168,7 @@ Page({
     return callCloudLibrary({
       type: 'qrcode',
       data: {
-        libId: this.data.libraryInfo.libId,
+        libId: this.libraryInfo.libId,
       }
     })
     .then(res => {
@@ -205,7 +209,7 @@ Page({
     const cirlceY = (this.canvas.height - imageH) / this.pixelRatio / 4 * 3 + imageH / 2 / this.pixelRatio;
     const r = 48;
 
-    this.getClippedImage(this.data.libraryInfo.cover, { width: 2 * r, height: 2 * r }, 1).then(result => {
+    this.getClippedImage(this.libraryInfo.cover, { width: 2 * r, height: 2 * r }, 1).then(result => {
       if (!result) return wx.showToast({ title: '二维码生成失败，请重试~', icon: 'none' });
 
       const { nextImgWidth, nextImgHeight, path } = result;
@@ -229,7 +233,7 @@ Page({
     this.ctx.fillStyle = '#00A2ED';
     this.ctx.font = '18px PingFang-Medium';
 
-    const title = this.data.libraryInfo.title;
+    const title = this.libraryInfo.title;
     const { width } = this.ctx.measureText(title);
 
     this.ctx.fillText(

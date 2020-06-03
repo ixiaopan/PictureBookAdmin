@@ -5,8 +5,10 @@
     bindscansearch="onScanSearch"
   />
 
+  <view class="bookshelf-border"></view>
+
   <!-- 筛选 -->
-  <view class="bookshelf-filter">
+  <view class="bookshelf-filter {{ sticky ? 'bookshelf-filter-sticky' : '' }}">
     <text class="bookshelf-filter-text bookshelf-filter-default {{ sortField ? '' : 'bookshelf-filter-text-active' }}" bindtap="sortBook" data-type="default">默认</text>
     <text class="bookshelf-filter-text bookshelf-filter-sort bookshelf-filter-time {{ sortField === 'create_time' ? 'bookshelf-filter-text-active bookshelf-filter-active-' + sortType : '' }}" bindtap="sortBook" data-type="create_time">录入时间</text>
     <text class="bookshelf-filter-text bookshelf-filter-sort bookshelf-filter-complete {{ sortField === 'complete' ? 'bookshelf-filter-text-active bookshelf-filter-active-' + sortType : '' }}" bindtap="sortBook"  data-type="complete">信息完整度</text>
@@ -28,6 +30,7 @@
         wx:key="_id" 
         book="{{ item }}" 
         bindbooktap="onBookTap"
+        binddeletebook="onDeleteBook"
       />
 
       <view wx:if="{{ bookList.length }}" class="loadmore">

@@ -1,28 +1,43 @@
-<view class="book-item i-class" bindtap="onBookTap">
-  <image src="{{ book.cover }}" class="book-item-image"></image>
+<view class="book-touch">
+  <touchme 
+    bindtouchmoving="onTouchMoving"
+    bindswipeleft="onSwipeLeft"
+    bindrelease="onRelease" 
+  >
+    <view 
+      catchtap="onBookTap"
+      bindtransitionend="onTransitionEnd" 
+      class="book-item i-class" 
+      style="transform: translateX({{ offset }}px);"
+    >
+      <image src="{{ book.cover }}" class="book-item-image"></image>
 
-  <view class="book-item-content">
-    <text class="book-item-title">{{ book.title }}</text>
+      <view class="book-item-content">
+        <text class="book-item-title">{{ book.title }}</text>
 
-    <!-- 评分 -->
-    <view wx:if="{{ book.rate }}" class="book-item-rate">
-      <i-rate class="book-item-rate-star" count="{{ 5 }}" size="16" value="{{ book.rate / 2 }}" />
- 
-      <text class="book-item-rate-num">{{ book.rate }}</text>
- 
-      <text class="book-item-rate-people">{{ book.numRaters }}人评分</text>
+        <!-- 评分 -->
+        <view wx:if="{{ book.rate }}" class="book-item-rate">
+          <i-rate class="book-item-rate-star" count="{{ 5 }}" size="16" value="{{ book.rate / 2 }}" />
+    
+          <text class="book-item-rate-num">{{ book.rate }}</text>
+    
+          <text class="book-item-rate-people">{{ book.numRaters }}人评分</text>
+        </view>
+
+        <!-- 作者 年月日 出版社 -->
+        <view class="book-item-author">
+          <text class="book-item-author-text">{{ book.author }}</text>
+          <text wx:if="{{ book.pubdate }}" class="book-item-author-text">/ {{ book.pubdate }}</text>
+          <text wx:if="{{ book.publisher }}" class="book-item-author-text">/ {{ book.publisher }}</text>
+        </view>
+
+        <!-- 信息完整度 -->
+        <view class="book-item-complete" >
+          <i-progress strokeWidth="8" percent="{{ book.complete }}" />
+        </view>
+      </view>
     </view>
+  </touchme>
 
-    <!-- 作者 年月日 出版社 -->
-    <text class="book-item-author">
-      {{ book.author }} 
-      <block wx:if="{{ book.pubdate }}">/ {{ book.pubdate }}</block>
-      <block wx:if="{{ book.publisher }}">/ {{ book.publisher }}</block>
-    </text>
-
-    <!-- 信息完整度 -->
-    <view class="book-item-complete" >
-      <i-progress strokeWidth="8" percent="{{ book.complete }}" />
-    </view>
-  </view>
+  <view catchtap="onDeleteItem" class="book-item-delete">删除</view>
 </view>

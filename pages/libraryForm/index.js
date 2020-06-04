@@ -8,6 +8,8 @@ const {
 
 const App = getApp();
 
+console.log(DEFAULT_LIBRARY_LOGO)
+
 Page({
   data: {
     disabled: true,
@@ -61,7 +63,7 @@ Page({
 
         libraryFormValue: libraryInfo,
 
-        defaultSrc: libraryInfo.cover,
+        defaultSrc: libraryInfo.cover || DEFAULT_LIBRARY_LOGO,
       } : {}),
     });
   },

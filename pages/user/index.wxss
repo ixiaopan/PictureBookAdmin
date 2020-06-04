@@ -14,8 +14,8 @@
 .user-avatar {
   flex: 0 0 auto;
   margin: 0 24rpx 0 0;
-  width: 140rpx;
-  height: 140rpx;
+  width: 112rpx;
+  height: 112rpx;
   border-radius: 16rpx;
 }
 .user-content {

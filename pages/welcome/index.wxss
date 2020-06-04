@@ -7,11 +7,13 @@
   background-color: #FAFCFC;
 }
 .welcome-poster {
-  width: 480rpx;
-  height: 580rpx;
+  /* width: 342rpx;
+  height: 682rpx; */
+  width: 400rpx;
+  height: 798rpx;
 }
 .welcome-title {
-  margin-top: 80rpx;
+  margin-top: 40rpx;
   color: #515257;
   font-size: 36rpx;
   font-family: "PingFang-Medium";

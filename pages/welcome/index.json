@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "",
+  "navigationBarTitleText": "欢迎",
   "usingComponents": {
     "i-spin": "../../dist/spin/index"
   }

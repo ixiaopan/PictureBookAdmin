@@ -8,8 +8,6 @@ const {
 
 const App = getApp();
 
-console.log(DEFAULT_LIBRARY_LOGO)
-
 Page({
   data: {
     disabled: true,
@@ -119,7 +117,7 @@ Page({
         const fileUrl = await qiniuUpload(previewSrc[0], token, keyToOverwrite);
 
         // 如果不是修改模式，这个就是 0；如果是修改模式，这个就是当前的版本
-        const { v = 0 } = getUrlVersion(libraryFormValue.cover);
+        const { v = 0 } = getUrlVersion(libraryFormValue.cover) || {};
 
         // 版本加1强制清除CDN
         resolve(increateUrlVersion(fileUrl, v));

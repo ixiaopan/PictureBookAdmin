@@ -118,10 +118,10 @@ Page({
   startSaveToAlbum: function (filePath) {
     wx.saveImageToPhotosAlbum({
       filePath,
-      success() {
+      success: () => {
         this.showSuccess();
       },
-      fail(err) {
+      fail: (err) => {
         if (/fail(.)*auth/.test(err.errMsg)) {
           return this.tryAuthAlbum();
         }
@@ -134,8 +134,8 @@ Page({
   tryAuthAlbum: function () {
     wx.showModal({
       title: '提示',
-      content: '您未授权读取相册，请点击底部按钮打开授权！',
-      success(res) {
+      content: '您未授权读取相册，请点击确定打开授权',
+      success: (res) => {
         if (res.confirm) {
           this.openSetting();
         }
@@ -145,7 +145,7 @@ Page({
 
   openSetting: function () {
     wx.openSetting({
-      success(settingdata) {
+      success: (settingdata) => {
         if (settingdata.authSetting['scope.writePhotosAlbum']) {
           return wx.showToast({ title: '可以保存二维码啦~', icon: 'none' });
         }

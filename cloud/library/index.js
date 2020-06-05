@@ -115,11 +115,11 @@ async function updateLibrary({ libId, ...res } = {}) {
 async function createQRCode ({ libId } = {}) {
   try {
     const { buffer } = await cloud.openapi.wxacode.get({
-      path: 'page/welcome/index',
-      width: 430
+      path: 'page/welcome/index?libId=' + libId,
+      width: 430,
     });
 
-    const { fileID } =  await cloud.uploadFile({
+    const { fileID } = await cloud.uploadFile({
       cloudPath: libId + '/wxacode.png',
       fileContent: buffer,
     });
@@ -146,13 +146,13 @@ const exportLibrary = async function ({ libId } = {}) {
 
     const { books } = libRes.data[0] || {};
 
+    if (!books || !books.length) {
+      return { success: true, data: null, };
+    }
+
     let allBooks = await bookDB.where({ libId, _id: _.in(books) }).get();
 
     allBooks = allBooks.data;
-
-    if (!allBooks.length) {
-      return { success: true, data: null, };
-    }
 
     // 1.
     const rowFields = ['isbn', 'title', 'cover', 'price', 'author', 'translator', 'pubdate', 'publisher', 'pages', 'author_intro', 'summary', 'rate', 'numRaters'];

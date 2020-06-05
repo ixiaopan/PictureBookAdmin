@@ -27,6 +27,22 @@ Page({
     });
   },
 
+  onShow: function () {
+    if (getApp().globalData.autoRefreshList) {
+      getApp().updateAutoRefresh(false);
+
+      const {  sortField, sortType, pagination } = this.data;
+
+      this.fetchBookList({
+        libId: this.libId,
+        sortField,
+        sortType,
+        page: 1,
+        pageSize: pagination.pageSize,
+      });
+    }
+  },
+
   // 页面滚动时执行
   onPageScroll: function (e) {
     console.log(e);

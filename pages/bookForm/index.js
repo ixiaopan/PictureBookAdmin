@@ -167,7 +167,7 @@ Page({
         const fileUrl = await qiniuUpload(this.data.previewSrc[0], token, keyToOverwrite);
 
         // 如果不是修改模式，这个就是 0；如果是修改模式，这个就是当前的版本
-        const { v = 0 } = getUrlVersion(this.data.scan.cover);
+        const { v = 0 } = getUrlVersion(this.data.scan.cover) || {};
 
         // 版本加1强制清除CDN
         resolve(increateUrlVersion(fileUrl, v));

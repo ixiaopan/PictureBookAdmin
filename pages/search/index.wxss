@@ -26,5 +26,6 @@
 .search-result-empty {
   height: 300rpx;
   font-size: 28rpx;
-  color: rgb(99, 110, 114);
+  color: rgb(180, 180, 180);
 }
+

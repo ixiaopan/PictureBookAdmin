@@ -14,6 +14,13 @@ Page({
     this.getBookByScanISBN(isbn);
   },
 
+  onUnload: function () {
+    // 打个标记，自动刷新书柜
+    if (!this.data.existed) {
+      getApp().updateAutoRefresh(true);
+    }
+  },
+
   getBookByScanISBN: function (isbn) {
     const libId = getApp().globalData.libraryInfo.libId;
 

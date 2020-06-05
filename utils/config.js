@@ -1,10 +1,8 @@
 export const DEFAULT_LIBRARY_LOGO = '/images/default_library.png';
 
-// TODO:
-export const WELCOME_POSTER = 'http://qaxzyu7rg.bkt.clouddn.com/poster.png';
+export const WELCOME_POSTER = 'http://pic.xiaopan.today/poster.png';
 
-// TODO:
-export const QINIU_CDN = 'http://qaxzyu7rg.bkt.clouddn.com';
+export const QINIU_CDN = 'http://pic.xiaopan.today';
 
 export const CACHE_KEY_MAP = {
   SEARCH_HISTORY: 'SEARCH_HISTORY',

@@ -13,6 +13,11 @@ App({
     userInfo: {},
     libraryInfo: {},
     windowHeight: 320,
+    autoRefreshList: false, // 打个标记，从查看书柜
+  },
+
+  updateAutoRefresh: function (refresh) {
+    this.globalData.autoRefreshList = refresh;
   },
 
   updateLibraryInfo: function (data) {

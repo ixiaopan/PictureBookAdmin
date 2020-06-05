@@ -31,7 +31,7 @@ const chooseImageAsync = () => {
   return new Promise(resolve => {
     wx.chooseImage({
       count: 1,
-      sizeType: ['original'],
+      sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: (res) => {
         const tempFilePaths = res.tempFilePaths;

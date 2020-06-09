@@ -7,7 +7,7 @@
     <image src="/images/error.png" class="error-icon"></image>
       忙不过来了~
     </view>
-  
+
   <!-- 欢迎页 -->
   <view wx:else class="col-center welcome-landing">
     <image src="{{ landingPoster }}" class="welcome-poster" mode="aspectFill"></image>

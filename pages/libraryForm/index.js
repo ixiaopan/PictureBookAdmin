@@ -1,7 +1,7 @@
 const { $Toast } = require('../../dist/base/index');
 const { chooseImageAsync, qiniuUpload, getUrlVersion, removeUrlVersion, increateUrlVersion } = require('../../utils/util');
 const { DEFAULT_LIBRARY_LOGO, } = require('../../utils/config');
-const { 
+const {
   callCloudLibrary,
   callCloudQiniuToken,
 } = require('../../utils/cloud');
@@ -11,12 +11,12 @@ const App = getApp();
 Page({
   data: {
     disabled: true,
-  
+
     // 默认书馆头像
     defaultSrc: DEFAULT_LIBRARY_LOGO,
     // 预览书馆图
     previewSrc: '',
-    
+
     // 创建和修改共用一个表单
     updateLibMode: false,
 
@@ -29,7 +29,7 @@ Page({
       title: '',
       cover: '',
       address: '',
-      contact: '', 
+      contact: '',
       telephone: '',
     },
   },
@@ -51,13 +51,13 @@ Page({
 
     const { userInfo, libraryInfo } = getApp().globalData || {};
 
-    this.setData({ 
+    this.setData({
       userInfo,
 
-      ...(updateLibMode ? { 
+      ...(updateLibMode ? {
         disabled: false,
 
-        updateLibMode,     
+        updateLibMode,
 
         libraryFormValue: libraryInfo,
 
@@ -84,20 +84,20 @@ Page({
     return this.requiredFields.every(field => this.formData[field]) && (this.data.previewSrc || this.data.defaultSrc);
   },
 
-  // 
+  //
   onCreateLibrary: function (e) {
     const { title = '', contact = '', telephone = '', address = '' } = e.detail.value || {};
 
     // prevent repeat
     if (this.locked) { return; }
-   
+
     this.locked = true;
-   
+
     this.setData({ disabled: true, });
-    
-    const { 
-      updateLibMode, 
-      userInfo, libraryFormValue, 
+
+    const {
+      updateLibMode,
+      userInfo, libraryFormValue,
       previewSrc, defaultSrc,
     } = this.data || {};
 
@@ -129,12 +129,12 @@ Page({
       console.log('final library url: ', cover);
 
       // 由上传失败，带过来的空值
-      if (!cover) { 
+      if (!cover) {
         return this.showError();
       }
 
       const params = {
-        cover, title, 
+        cover, title,
         contact, telephone, address,
       };
 
@@ -142,7 +142,7 @@ Page({
       if (updateLibMode) {
         callCloudLibrary({
           type: 'update',
-          data: { 
+          data: {
             libId: libraryFormValue.libId,
             ...params,
           },
@@ -172,7 +172,7 @@ Page({
       // 创建模式
       callCloudLibrary({
         type: 'create',
-        data: { 
+        data: {
           library: params,
           user: userInfo,
         },
@@ -183,9 +183,9 @@ Page({
         }
 
         wx.hideLoading();
-        
+
         wx.showToast({ title: '创建成功', });
-        
+
         // 更新全局书馆信息
         App.updateLibraryInfo({ ...params, libId: res.data.libId, });
 
@@ -209,8 +209,8 @@ Page({
 
     this.setData({ disabled: false, });
 
-    $Toast({ 
-      content: err && err.msg || (this.data.updateLibMode ? '修改失败，请重试!' : '创建失败，请重试!'), 
+    $Toast({
+      content: err && err.msg || (this.data.updateLibMode ? '修改失败，请重试!' : '创建失败，请重试!'),
       type: 'error',
     });
   },

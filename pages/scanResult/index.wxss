@@ -1,6 +1,6 @@
 .scan-result-overview {
   background-color: #fff;
-  padding: 32rpx; 
+  padding: 32rpx;
 }
 
 .scan-result-text {

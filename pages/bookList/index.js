@@ -46,7 +46,7 @@ Page({
   // 页面滚动时执行
   onPageScroll: function (e) {
     console.log(e);
-    
+
     this.setData({
       sticky: e.scrollTop > 60
     });

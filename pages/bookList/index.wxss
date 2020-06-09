@@ -30,7 +30,7 @@
   position: relative;
   line-height: 40rpx;
   padding-right: 24rpx;
-  
+
   font-size: 26rpx;
   font-size: "PingFang-SC";
   color: rgb(99, 110, 114);
@@ -49,7 +49,7 @@
 }
 .bookshelf-filter-sort::after {
   content: '';
- 
+
   position: absolute;
   right: 4rpx;
   bottom: 4rpx;
@@ -58,7 +58,7 @@
   border-left-color: transparent;
   border-right-color: transparent;
   border-bottom-color: transparent;
-  
+
 }
 /*  */
 .bookshelf-filter-text-active {

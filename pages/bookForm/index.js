@@ -1,12 +1,12 @@
 const { $Toast } = require('../../dist/base/index');
 
-const { 
-  chooseImageAsync, scanAsync, 
+const {
+  chooseImageAsync, scanAsync,
   qiniuUpload, recordBookByScanOrHand,
   getUrlVersion, increateUrlVersion, removeUrlVersion
 } = require('../../utils/util');
 
-const { 
+const {
   callCloudBook,
   callCloudQiniuToken
 } = require('../../utils/cloud');
@@ -14,7 +14,7 @@ const {
 Page({
   data: {
     loading: true,
- 
+
     disabled: true,
 
     // 预览图片用的
@@ -32,13 +32,13 @@ Page({
       cover: '',
       title: '',
       isbn: '',
-      price: '', 
-      author: '', 
-      translator: '', 
-      pubdate: '', 
-      publisher: '', 
+      price: '',
+      author: '',
+      translator: '',
+      pubdate: '',
+      publisher: '',
       pages: '',
-      author_intro: '', 
+      author_intro: '',
       summary: '',
     },
   },
@@ -82,7 +82,7 @@ Page({
         return;
       }
 
-      this.setData({ 
+      this.setData({
         bookid,
         loading: false,
         scan: res.data,
@@ -112,8 +112,8 @@ Page({
 
   onChooseBookCover: function () {
     chooseImageAsync().then(tempFilePaths => {
-      this.setData({ 
-        previewSrc: tempFilePaths, 
+      this.setData({
+        previewSrc: tempFilePaths,
         disabled: !this.checkValid(true),
       });
     });
@@ -136,10 +136,10 @@ Page({
   onCreateRecord: function (e) {
     console.log('record form data: ', e.detail.value);
 
-    const { 
-      title, isbn, 
+    const {
+      title, isbn,
       library_inner_index,
-      price, author, translator, 
+      price, author, translator,
       pubdate, publisher, pages,
       author_intro, summary,
     } = e.detail.value || {};
@@ -179,7 +179,7 @@ Page({
       console.log('final book url: ', cover);
 
       // 由上传失败，带过来的空值, 直接拒绝;
-      if (!cover) { 
+      if (!cover) {
         return this.showError();
       }
 
@@ -187,9 +187,9 @@ Page({
         ...(this.data.bookid ? { _id: this.data.bookid } : {}),
         libId: this.libId,
         cover,
-        title, isbn, 
+        title, isbn,
         library_inner_index,
-        price, author, translator, 
+        price, author, translator,
         pubdate, publisher, pages,
         author_intro, summary,
       };
@@ -200,7 +200,7 @@ Page({
           if (!res || !res.success) {
             return this.showError(res);
           }
-  
+
           // 更新下才主动刷新 CDN, don't care fail or not
           await callCloudQiniuToken({
             type: 'refresh',

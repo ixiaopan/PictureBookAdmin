@@ -1,6 +1,6 @@
 <view class="bookshelf-page">
   <!-- 搜索 -->
-  <searchbar 
+  <searchbar
     bindbartap="onBarTap"
     bindscansearch="onScanSearch"
   />
@@ -24,11 +24,11 @@
         空空如也，赶快去『首页』录入书籍吧！
       </view>
 
-      <book-item 
-        i-class="bookshelf-book-item" 
+      <book-item
+        i-class="bookshelf-book-item"
         wx:for="{{ bookList }}"
-        wx:key="_id" 
-        book="{{ item }}" 
+        wx:key="_id"
+        book="{{ item }}"
         bindbooktap="onBookTap"
         binddeletebook="onDeleteBook"
       />

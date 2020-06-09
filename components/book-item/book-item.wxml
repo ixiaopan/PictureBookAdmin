@@ -1,13 +1,13 @@
 <view class="book-touch">
-  <touchme 
+  <touchme
     bindtouchmoving="onTouchMoving"
     bindswipeleft="onSwipeLeft"
-    bindrelease="onRelease" 
+    bindrelease="onRelease"
   >
-    <view 
+    <view
       catchtap="onBookTap"
-      bindtransitionend="onTransitionEnd" 
-      class="book-item i-class" 
+      bindtransitionend="onTransitionEnd"
+      class="book-item i-class"
       style="transform: translateX({{ offset }}px);"
     >
       <image src="{{ book.cover }}" class="book-item-image"></image>
@@ -18,9 +18,9 @@
         <!-- 评分 -->
         <view wx:if="{{ book.rate }}" class="book-item-rate">
           <i-rate class="book-item-rate-star" count="{{ 5 }}" size="16" value="{{ book.rate / 2 }}" />
-    
+
           <text class="book-item-rate-num">{{ book.rate }}</text>
-    
+
           <text class="book-item-rate-people">{{ book.numRaters }}人评分</text>
         </view>
 

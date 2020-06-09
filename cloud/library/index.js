@@ -75,7 +75,7 @@ async function createLibrary({ library, user, } = {}) {
   }
 
   // 3.
-  return { 
+  return {
     success: true,
     data: {
       libId: libraryDoc._id,
@@ -124,7 +124,7 @@ async function createQRCode ({ libId } = {}) {
       fileContent: buffer,
     });
 
-    // 
+    //
     const res = await cloud.getTempFileURL({
       fileList: [ fileID ],
     });
@@ -168,7 +168,7 @@ const exportLibrary = async function ({ libId } = {}) {
     }, []);
     table.unshift(rowHeader);
 
-    // 
+    //
     const buffer = await xlsx.build([{
       name: 'sheet',
       data: table,
@@ -178,7 +178,7 @@ const exportLibrary = async function ({ libId } = {}) {
       fileContent: buffer,
     });
 
-    // 
+    //
     const { fileID } = result || {};
     const res = await cloud.getTempFileURL({
       fileList: [ fileID ],
@@ -208,10 +208,10 @@ exports.main = async (event) => {
 
     case 'qrcode':
       return createQRCode(data);
-   
+
     case 'export':
       return exportLibrary(data);
 
     default:
-  } 
+  }
 }

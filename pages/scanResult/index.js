@@ -31,7 +31,7 @@ Page({
         return this.showError();
       }
 
-      this.setData({ 
+      this.setData({
         loading: false,
         existed: !!res.existed,
         scanBook: {
@@ -41,7 +41,7 @@ Page({
       });
     });
   },
-  
+
   showError: function () {
     this.setData({ loading: false, });
 
@@ -67,7 +67,7 @@ Page({
       this.getBookByScanISBN(isbn);
     });
   },
-  
+
   onGoShelf: function () {
     wx.switchTab({
       url: '/pages/bookList/index',

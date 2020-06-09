@@ -22,7 +22,7 @@ Component({
     onTouchMoving: function (e) {
       const { dir, diff } = e.detail;
 
-      this.setData({ 
+      this.setData({
         offset: dir == 'left' ? Math.max(-120, diff) : 0,
       });
     },

@@ -8,8 +8,8 @@ const db = cloud.database();
 const userDB = db.collection('users');
 
 const systemError = {
-  success: false, 
-  errCode: 60001, 
+  success: false,
+  errCode: 60001,
   errMsg: '系统错误，请重试~',
 };
 
@@ -20,7 +20,7 @@ exports.main = async () => {
   // 1.
   let userDoc = null;
   try {
-    // 1.1 
+    // 1.1
     const userRes = await userDB.where({ _openid: openid, }).get();
 
     userDoc = userRes.data[0];
@@ -28,7 +28,7 @@ exports.main = async () => {
     // 1.2 create it if the user does not exist
     if (!userDoc) {
       userDoc = await userDB.add({
-        data: { 
+        data: {
           _openid: openid,
           library: '', // current library
           libraries: [], // one can have many libraries
@@ -65,10 +65,10 @@ exports.main = async () => {
   // { data: { _id: '', address: '' } }
   console.log('[get library] success: ', libraryDoc);
 
-  const { 
-    _id: libId, 
+  const {
+    _id: libId,
     title, cover,
-    address, contact, telephone, 
+    address, contact, telephone,
     book_count,
   } = libraryDoc.data || {};
 
@@ -81,15 +81,15 @@ exports.main = async () => {
         uid,
         nickName,
         avatarUrl,
-        library, 
+        library,
         libraries,
       },
       libraryInfo: {
-        libId, 
-        title, 
+        libId,
+        title,
         cover,
-        address, 
-        contact, 
+        address,
+        contact,
         telephone,
         book_count,
       },

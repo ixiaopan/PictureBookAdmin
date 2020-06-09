@@ -76,13 +76,13 @@
       <text class="form-item-label">内容简介</text>
       <textarea placeholder="请输入" value="{{ scan.summary }}"  placeholder-class="form-item-placeholder" class="form-item-textarea" name="summary" />
     </view>
-    
+
     <view class="row-center record-action">
       <button disabled="{{ disabled }}" formType="submit" class="theme-button record-button  {{ disabled ? 'disabled' : '' }}" hover-class="button-hover">保存</button>
     </view>
   </form>
 
   <i-spin i-class="loading-page" fix size="large" wx:if="{{ loading }}"></i-spin>
-  
+
   <i-toast id="toast" />
 </view>

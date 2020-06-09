@@ -30,7 +30,7 @@ Page({
       // 进入首页
       if (data && data.libraryInfo) {
         App.updateLibraryInfo(data.libraryInfo);
-  
+
         return wx.reLaunch({ url: '/pages/home/index' });
       }
 

@@ -6,15 +6,15 @@
       <text class="search-result-title">馆内结果</text>
 
       <view wx:if="{{ resultList && resultList.length }}" class="search-result-list">
-        <book-item 
-          i-class="bookshelf-book-item" 
+        <book-item
+          i-class="bookshelf-book-item"
           wx:for="{{ resultList }}"
-          wx:key="_id" 
-          book="{{ item }}" 
+          wx:key="_id"
+          book="{{ item }}"
           bindbooktap="onBookTap"
         />
       </view>
-  
+
       <view wx:else class="col-center search-result-empty">书馆内找不到此书~</view>
     </view>
 

@@ -2,3 +2,4 @@
 node_modules
 /cloud/qiniu-token/*
 /cloud/token/*
+/logos

@@ -3,10 +3,10 @@
     <canvas type="2d" canvas-id="my-canvas" id="my-canvas"></canvas>
   </view>
 
-  <button 
-    disabled="{{ loading }}" 
-    class="theme-button" 
-    style="width: {{ (canvasW - 48 ) * 2 }}rpx !important;" 
+  <button
+    disabled="{{ loading }}"
+    class="theme-button"
+    style="width: {{ (canvasW - 48 ) * 2 }}rpx !important;"
     bindtap="saveToAlbum"
   >保存到相册</button>
 </view>

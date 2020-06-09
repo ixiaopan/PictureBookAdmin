@@ -60,7 +60,7 @@ const scanAsync = () => {
         resolve();
       },
     });
-  }); 
+  });
 }
 
 const getStorageAsync = (key) => {
@@ -110,7 +110,7 @@ const removeStorageAsync = (key) => {
       },
     });
   });
-  
+
 }
 
 const omit = (obj, keyList) => {
@@ -151,7 +151,7 @@ const increateUrlVersion = (cover, v = 0) => {
   const [ url, search ]= ('' + cover).split('?');
 
   const query = getUrlVersion(cover);
-  
+
   query.v = parseInt(v, 10) + 1;
 
   const rList = Object.keys(query).reduce((memo, key) => {
@@ -252,7 +252,7 @@ module.exports = {
   omit: omit,
   noop: noop,
   getUrlVersion: getUrlVersion,
-  removeUrlVersion: removeUrlVersion, 
+  removeUrlVersion: removeUrlVersion,
   increateUrlVersion: increateUrlVersion,
   qiniuUpload: qiniuUpload,
   formatTime: formatTime,

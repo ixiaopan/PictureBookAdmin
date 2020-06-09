@@ -31,8 +31,8 @@ Page({
       // 2. 画官方二维码
       const officialImage = await this.drawOfficialQRCode();
 
-      // TODO: 
-      // 3. 
+      // TODO:
+      // 3.
       // this.drawLogo(officialImage);
 
       // 4.
@@ -189,11 +189,11 @@ Page({
           image.src = path;
           image.onload = () => {
             this.ctx.drawImage(
-              image, 
+              image,
               (this.canvas.width - nextImgWidth) / this.pixelRatio / 2,
               // (this.canvas.height - nextImgHeight) / this.pixelRatio / 4 * 3, // 有 title
               (this.canvas.height - nextImgHeight) / this.pixelRatio / 2, // 无 title
-              nextImgWidth / this.pixelRatio, 
+              nextImgWidth / this.pixelRatio,
               nextImgHeight / this.pixelRatio
             );
 
@@ -237,7 +237,7 @@ Page({
     const { width } = this.ctx.measureText(title);
 
     this.ctx.fillText(
-      title, 
+      title,
       (this.canvas.width / this.pixelRatio - width) / 2,
       (this.canvas.height - imageH) / this.pixelRatio / 4 * 2
     );
